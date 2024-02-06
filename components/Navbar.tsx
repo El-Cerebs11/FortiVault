@@ -54,7 +54,7 @@ export default function Navbar() {
         </div>
         <div className="navbar-center">
             <div className="flex items-center justify-center">
-                <Image src={Logo} width="100" height="20"  alt=''/>
+               <span >FortiVault</span>
             </div>
         </div>
         <div className="navbar-end">
