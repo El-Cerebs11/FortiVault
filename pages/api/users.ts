@@ -2,7 +2,7 @@
 
 import { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client'
-import { getById, getAll, create, update, remove } from '@/services/Query'
+import { getById, getAll, create, update, remove, hashString } from '@/services/Query'
 
 const prisma = new PrismaClient()
 const model = prisma.user
@@ -19,6 +19,7 @@ export default async function handler(
       return getAll(req, res, model)
     }
   } else if (req.method === 'POST') {
+    req.body.password =await hashString(req.body.password)
     return create(req, res, model)
   } else if (req.method === 'PUT') {
     return update(req, res, model)

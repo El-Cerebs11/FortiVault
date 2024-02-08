@@ -5,6 +5,7 @@ import { Inter } from 'next/font/google'
 import SessionProvider from './SessionProvider'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import { useRouter } from 'next/router'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -13,16 +14,17 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const session = await getServerSession(authOptions as AuthOptions)
+  const session = await getServerSession(authOptions)
   return (
     <html lang='en' >
     
       <body className={inter.className}>
+    
         <SessionProvider session={session}>
-          <Navbar />
+        <Navbar />
           {children}
-          <Footer />
         </SessionProvider>
+        <Footer />
       </body>
     </html>
   )

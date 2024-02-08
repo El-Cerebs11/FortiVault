@@ -154,6 +154,7 @@ export default function SignInPage() {
           <div className='mt-5 flex items-center justify-center'>
             <button
               className='px-4 py-2 justify-center w-full border flex gap-2 border-slate-200 rounded-lg text-slate-700  hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150'
+              onClick={(e)=>signIn('google')}
             >
               <Image
                 width={60}
@@ -162,6 +163,7 @@ export default function SignInPage() {
                 src='https://www.svgrepo.com/show/475656/google-color.svg'
                 loading='lazy'
                 alt='google logo'
+                
               />
               <span className='text-black' >Login with Google</span>
             </button>

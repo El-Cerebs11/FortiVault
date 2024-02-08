@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import bcrypt from 'bcrypt';
 
 export async function getById(objId: number, res: NextApiResponse, model: any) {
   try {
@@ -80,5 +81,30 @@ export async function remove(
   } catch (error) {
     console.error('Error deleting :', error)
     res.status(500).json({ error: 'Internal server error' })
+  }
+}
+
+
+
+
+export async function hashString(password: string): Promise<string> {
+    try {
+        const saltRounds: number = 10; // Recommended number of rounds
+        const salt: string = await bcrypt.genSalt(saltRounds);
+        const hash: string = await bcrypt.hash(password, salt);
+        return hash;
+    } catch (error) {
+        console.error('Error hashing password:', error);
+        throw error;
+    }
+}
+
+
+export async function compareHash(plainTextPassword: string, hashedPassword: string): Promise<boolean> {
+  try {
+      return await bcrypt.compare(plainTextPassword, hashedPassword);
+  } catch (error) {
+      console.error('Error comparing passwords:', error);
+      throw error;
   }
 }

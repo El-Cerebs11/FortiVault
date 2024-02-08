@@ -1,19 +1,18 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import Logo from '/assets/logo3.png'
+import Logo from '/assets/logo.png'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useSession } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import { useFormik } from 'formik'
-import UserService from '@/services/UserService'
+
 
 export default function SignUp() {
   const [serverErrors, setServerErrors] = useState('')
   const router = useRouter()
 
   const session = useSession()
-  const userService = new UserService(session)
 
   type FormDataType = {
     email: string
@@ -47,19 +46,7 @@ export default function SignUp() {
 
     onSubmit: (data: FormDataType) => {
       if (data) {
-        userService
-          .signUp(formik.values['email'], formik.values['password'])
-          .then(() => {
-            userService.signIn(
-              'Credentials',
-              formik.values['email'],
-              formik.values['password']
-            )
-          })
-          .catch((e) => {
-            setServerErrors('Server Error 500')
-            console.log(e)
-          })
+    
       }
     },
   })
@@ -93,7 +80,7 @@ export default function SignUp() {
             height='80'
             alt='logo'
           />
-          <h2 className='mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white-900'>
+          <h2 className='mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-black'>
             Sign up your account
           </h2>
         </div>
@@ -107,7 +94,7 @@ export default function SignUp() {
             <div>
               <label
                 htmlFor='email'
-                className='block text-sm font-medium leading-6 text-white-900'
+                className='block text-sm font-medium leading-6 text-black'
               >
                 Email address
               </label>
@@ -121,7 +108,7 @@ export default function SignUp() {
                     formik.setFieldValue('email', e.target.value)
                   }
                   value={formik.values['email']}
-                  className='block w-full rounded-md border-0 px-4 py-1.5 text-white-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white-400 focus:ring-2 focus:ring-inset focus:ring-white-600 sm:text-sm sm:leading-6'
+                  className='block w-full rounded-md border-0 px-4 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white-400 focus:ring-2 focus:ring-inset focus:ring-white-600 sm:text-sm sm:leading-6'
                 />
                 {getFormErrorMessage('email')}
               </div>
@@ -131,7 +118,7 @@ export default function SignUp() {
               <div className='flex items-center justify-between'>
                 <label
                   htmlFor='password'
-                  className='block text-sm font-medium leading-6 text-white-900'
+                  className='block text-sm font-medium leading-6 text-black'
                 >
                   Password
                 </label>
@@ -146,7 +133,7 @@ export default function SignUp() {
                     formik.setFieldValue('password', e.target.value)
                   }
                   value={formik.values['password']}
-                  className='block w-full rounded-md border-0 px-4 py-1.5 text-white-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                  className='block w-full rounded-md border-0 px-4 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
                 />
                 {getFormErrorMessage('password')}
               </div>
@@ -156,7 +143,7 @@ export default function SignUp() {
               <div className='flex items-center justify-between'>
                 <label
                   htmlFor='password'
-                  className='block text-sm font-medium leading-6 text-white-900'
+                  className='block text-sm font-medium leading-6 text-black'
                 >
                   Confirm password
                 </label>
@@ -171,7 +158,7 @@ export default function SignUp() {
                     formik.setFieldValue('passwordAgain', e.target.value)
                   }
                   value={formik.values['passwordAgain']}
-                  className='block w-full rounded-md border-0 px-4 py-1.5 text-white-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                  className='block w-full rounded-md border-0 px-4 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
                 />
                 {getFormErrorMessage('passwordAgain')}
               </div>
@@ -188,7 +175,7 @@ export default function SignUp() {
             <div className='mt-5 flex items-center justify-center'>
               <button
                 className='px-4 py-2 justify-center w-full border flex gap-2 border-slate-200  rounded-lg text-slate-700   hover:border-slate-400  hover:text-slate-900  hover:shadow transition duration-150'
-                onClick={() => userService.signIn('google')}
+                onClick={() => signIn('google')}
               >
                 <Image
                   width={60}

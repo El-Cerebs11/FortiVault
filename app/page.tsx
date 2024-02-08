@@ -6,15 +6,12 @@ import { useEffect } from 'react'
 import { PrismaClient } from '@prisma/client'
 
 export default function Home() {
-  const session = useSession({
-    required: false,
-  })
+  const session = useSession()
 
   const prisma = new PrismaClient()
 
   const router = useRouter()
 
-  useEffect(() => {}, [])
 
   return (
     <div className='bg-grey-900 h-screen flex items-center p-6'>
@@ -24,9 +21,7 @@ export default function Home() {
             Welcome to FortiVault
           </h1>
           <p className='mt-6 text-lg leading-8 text-black'>
-            Welcome student {session?.data?.user?.email} in this platform you
-            will find anything you need as a student to learn and improve your
-            skills in IT world.
+            Welcome <span hidden={session?.data?.user?.email ?  false :true} className='bg-green-100 text-green-800 font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300'>{session?.data?.user?.email}</span>  to our secure password manager! Your security matters to us. Store and manage passwords with ease. Say hello to worry-free logins!
           </p>
           <div className='mt-10 flex items-center justify-center gap-x-6'>
             <a
@@ -59,7 +54,7 @@ export default function Home() {
       </div>
 
 
- 
+
     </div>
   )
 }

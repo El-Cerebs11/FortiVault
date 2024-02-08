@@ -1,21 +1,38 @@
 
 'use client'
-import { Fragment } from 'react'
+import { Fragment, useEffect } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image';
 import logo from '@/assets/logo.png'
-import favicon from '@/app/favicon.ico'
-const navigation = [
-  { name: 'Home', href: '#', current: true },
-  { name: 'Password', href: '#', current: false },
-]
+import { signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+
+import { usePathname } from 'next/navigation'
+
+
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function Navbar() {
+
+ const session = useSession()
+
+  const router = useRouter()
+  const pathname = usePathname()
+  useEffect(() => {
+    console.log(router);
+    
+  }, [router])
+  
+  const navigation = [
+    { name: 'Home', href: '/', current: pathname === '/' },
+    { name: 'Password', href: '#',  current: pathname === '#' },
+    { name: 'Sign In', href: '/signin',  current: pathname === '/signin'},
+    { name: 'Sign Up', href: '/signup',  current: pathname === '/signup'}
+  ]
   return (
 
     <Disclosure as="nav" className="bg-gray-800">
@@ -43,9 +60,9 @@ export default function Navbar() {
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
                     {navigation.map((item) => (
-                      <a
+                      <button
                         key={item.name}
-                        href={item.href}
+                       onClick={(e) => {router.push(item.href);}}
                         className={classNames(
                           item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                           'rounded-md px-3 py-2 text-sm font-medium'
@@ -53,12 +70,13 @@ export default function Navbar() {
                         aria-current={item.current ? 'page' : undefined}
                       >
                         {item.name}
-                      </a>
+                      </button>
                     ))}
                   </div>
                 </div>
               </div>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+              
+              <div  className={ classNames((session.status === 'unauthenticated' || !session) ? 'hidden' : '', "absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0") }>
                 <button
                   type="button"
                   className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
@@ -114,7 +132,7 @@ export default function Navbar() {
                       <Menu.Item>
                         {({ active }) => (
                           <a
-                            href="#"
+                            onClick={()=> signOut()}
                             className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                           >
                             Sign out
@@ -124,6 +142,7 @@ export default function Navbar() {
                     </Menu.Items>
                   </Transition>
                 </Menu>
+                
               </div>
             </div>
           </div>
