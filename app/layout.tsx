@@ -1,4 +1,4 @@
-import { authOptions } from '../pages/api/auth/[...nextauth]'
+import { authOptions } from '@/pages/api/auth/[...nextauth]'
 import { getServerSession } from 'next-auth'
 import './globals.css'
 import { Inter } from 'next/font/google'
@@ -16,6 +16,7 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions)
   return (
     <html lang='en'>
+    
       <body className={inter.className}>
         <SessionProvider session={session}>
           <Navbar />

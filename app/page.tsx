@@ -23,7 +23,7 @@ export default function Home() {
           <h1 className='text-4xl font-bold tracking-tight text-white sm:text-6xl'>
             Welcome to FortiVault
           </h1>
-          <p className='mt-6 text-lg leading-8 text-gray-400'>
+          <p className='mt-6 text-lg leading-8 text-black'>
             Welcome student {session?.data?.user?.email} in this platform you
             will find anything you need as a student to learn and improve your
             skills in IT world.
@@ -57,6 +57,9 @@ export default function Home() {
           }}
         />
       </div>
+
+
+ 
     </div>
   )
 }
