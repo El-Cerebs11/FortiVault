@@ -187,7 +187,7 @@ export default function SignUp() {
             </div>
             <div className='mt-5 flex items-center justify-center'>
               <button
-                className='px-4 py-2 justify-center w-full border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150'
+                className='px-4 py-2 justify-center w-full border flex gap-2 border-slate-200  rounded-lg text-slate-700   hover:border-slate-400  hover:text-slate-900  hover:shadow transition duration-150'
                 onClick={() => userService.signIn('google')}
               >
                 <Image
@@ -205,7 +205,7 @@ export default function SignUp() {
 
           <div hidden={!serverErrors}>
             <div
-              className='flex items-center p-4 mb-4 mt-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400'
+              className='flex items-center p-4 mb-4 mt-4 text-sm text-red-800 rounded-lg bg-red-50 '
               role='alert'
             >
               <svg

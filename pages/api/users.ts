@@ -5,7 +5,7 @@ import { PrismaClient } from '@prisma/client'
 import { getById, getAll, create, update, remove } from '@/services/Query'
 
 const prisma = new PrismaClient()
-const model = prisma.userTest
+const model = prisma.user
 
 export default async function handler(
   req: NextApiRequest,

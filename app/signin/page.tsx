@@ -2,15 +2,16 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import Logo from '/assets/logo3.png'
+import Logo from '/assets/logo.png'
 import Image from 'next/image'
-import { useSession } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import { useFormik } from 'formik'
-import UserService from '@/services/UserService'
+
+
 
 export default function SignInPage() {
+
   const session = useSession()
-  const userService = new UserService(session)
 
   const router = useRouter()
 
@@ -22,6 +23,8 @@ export default function SignInPage() {
     email: '',
     password: '',
   }
+
+
 
   const formik = useFormik({
     initialValues: initialValues,
@@ -38,11 +41,9 @@ export default function SignInPage() {
 
     onSubmit: (data: FormDataType) => {
       if (data) {
-        userService.signIn(
-          'Credentials',
-          formik.values['email'],
-          formik.values['password']
-        )
+
+        signIn('credentials', { email:  formik.values['email'],password:  formik.values['password'], redirect: true, callbackUrl: '/' })
+      
       }
     },
   })
@@ -103,7 +104,7 @@ export default function SignInPage() {
                   onChange={(e) =>
                     formik.setFieldValue('email', e.target.value)
                   }
-                  className='block w-full rounded-md border-0 px-4 py-1.5 text-white-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white-400 focus:ring-2 focus:ring-inset focus:ring-white-600 sm:text-sm sm:leading-6'
+                  className='block w-full rounded-md border-0 px-4 py-1.5 text-black shadow-sm ring-1 ring-inset ring-black placeholder:text-black focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6'
                 />
                 {getFormErrorMessage('email')}
               </div>
@@ -136,7 +137,7 @@ export default function SignInPage() {
                   onChange={(e) =>
                     formik.setFieldValue('password', e.target.value)
                   }
-                  className='block w-full rounded-md border-0 px-4 py-1.5 text-white-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                  className='block w-full rounded-md border-0 px-4 py-1.5 text-black shadow-sm ring-1 ring-inset ring-black placeholder:text-black focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
                 />
                 {getFormErrorMessage('password')}
               </div>
@@ -152,8 +153,7 @@ export default function SignInPage() {
           </form>
           <div className='mt-5 flex items-center justify-center'>
             <button
-              className='px-4 py-2 justify-center w-full border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150'
-              onClick={() => userService.signIn('google')}
+              className='px-4 py-2 justify-center w-full border flex gap-2 border-slate-200 rounded-lg text-slate-700  hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150'
             >
               <Image
                 width={60}
@@ -163,7 +163,7 @@ export default function SignInPage() {
                 loading='lazy'
                 alt='google logo'
               />
-              <span>Login with Google</span>
+              <span className='text-black' >Login with Google</span>
             </button>
           </div>
 
