@@ -26,6 +26,7 @@ const config: Config = {
     },
     extend: {
       colors: {
+        'default-text': '#333333',
         primary: '#E6E3EC',
         secondary: '#ffffff',
         tertiary: '#000000',

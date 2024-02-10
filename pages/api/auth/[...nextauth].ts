@@ -25,7 +25,6 @@ export const authOptions: AuthOptions = {
       credentials: {},
       async authorize(credentials) {
 
-
         const user = await prisma.user.findUnique({
           where: {
             email: (credentials as any).email,
