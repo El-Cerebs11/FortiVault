@@ -49,9 +49,7 @@ export default function SignUp() {
       if (data) {
         const { passwordAgain, ...params } = data;
         try {
-          const response = await axios.post('/api/users', params);
-          console.log(response.data);
-          
+          const response = await axios.post('/api/user', params); 
           signIn('credentials', {
             email: response.data['email'],
             password: params.password,
@@ -87,7 +85,7 @@ export default function SignUp() {
 
   return (
     <>
-    <div className='flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8 dark:bg-gray-800'>
+    <div className='flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8'>
       <div className='sm:mx-auto sm:w-full sm:max-w-sm'>
         <Image
           className='mx-auto h-20 w-auto'
@@ -233,7 +231,7 @@ export default function SignUp() {
           Already member?{' '}
           <a
               onClick={() => router.push('signin')}
-            className='font-semibold leading-6 text-indigo-600 hover:text-indigo-500'
+            className='font-semibold leading-6 text-indigo-600 hover:text-indigo-500 dark:text-indigo-200'
           >
             Sign in
           </a>

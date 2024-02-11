@@ -24,7 +24,9 @@ export default async function RootLayout({
     
         <SessionProvider session={session}>
         <Navbar  />
-          {children}
+        <div className='dark:bg-gray-800'>
+        {children}
+        </div> 
         <Footer />
         </SessionProvider>
       </body>

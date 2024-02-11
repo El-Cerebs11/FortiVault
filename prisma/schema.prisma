@@ -43,7 +43,20 @@ model User {
   password      String?
   accounts      Account[]
   sessions      Session[]
+  passwordManagers PasswordManager[]
 }
+
+
+model PasswordManager {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  serviceName         String   
+  serviceUrl          String?  
+  password            String
+}
+
+
 
 model VerificationToken {
   identifier String

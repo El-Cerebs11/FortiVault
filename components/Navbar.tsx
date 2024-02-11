@@ -44,7 +44,7 @@ export default function Navbar() {
 
   const navigation = [
     { name: 'Home', href: '/', current: pathname === '/' },
-    { name: 'Password', href: '#', current: pathname === '#' },
+    { name: 'Password', href: '/password', current: pathname === '/password' },
     { name: 'Sign In', href: '/signin', current: pathname === '/signin' },
     { name: 'Sign Up', href: '/signup', current: pathname === '/signup' }
   ];
