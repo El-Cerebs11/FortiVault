@@ -12,8 +12,8 @@
     res: NextApiResponse
   ) {
     if (req.method === 'GET') {
-      const objId = parseInt(req.query.id as string, 10)
-      if (!isNaN(objId)) {
+      const objId = req.query.id as string
+      if (objId) {
         return getById(objId, res, model)
       } else {
         return getAll(req, res, model)

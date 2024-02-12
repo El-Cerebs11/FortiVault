@@ -17,7 +17,7 @@ import { InputText } from 'primereact/inputtext';
 import { useSession } from 'next-auth/react'
 import 'primeicons/primeicons.css';
 import { useRouter } from 'next/navigation';
-
+import { getSession } from 'next-auth/react'
 
 interface Product {
   id: string | null;
@@ -36,7 +36,7 @@ export default function ProductsDemo() {
 
 
     const router = useRouter() 
-
+   
     const session = useSession({
         required: true,
         onUnauthenticated() {
@@ -123,10 +123,11 @@ const formik = useFormik({
        
       if (data) {
         try {
-            console.log(session?.data?.user);
-             
-        //     const response = await axios.post(apiUrl, data); 
-        //    console.log(response.data);
+         
+             data.userId = session?.data?.user?.id as string
+             const {id, ...params}  = data
+        
+            const response = await axios.post(apiUrl, params ); 
            
           } catch (error) {
             throw error;

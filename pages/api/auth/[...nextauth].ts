@@ -4,6 +4,8 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compareHash, hashString } from "@/services/Query";
+import { DefaultSession } from 'next-auth'; // Assuming next-auth is a module or file
+
 
 
 
@@ -19,6 +21,23 @@ export const authOptions: AuthOptions = {
     signIn: '/signin',
   },
   adapter: PrismaAdapter(prisma),
+  callbacks: {
+    session: async ({ session, token, user }) => {
+
+      if (session?.user) {     
+        session.user.id = token.uid as string;
+      }      
+      return session;
+    },
+
+    jwt: async ({ token , user , account, profile }) => {
+      if (user) {
+        token.uid = user.id;
+      }
+      return token;
+    },
+
+  },
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -33,6 +52,7 @@ export const authOptions: AuthOptions = {
 
         if (user) {
           const checkHash = await compareHash((credentials as any).password as string, user.password as string)
+          
           if (checkHash)
             return user;
         }
@@ -41,6 +61,7 @@ export const authOptions: AuthOptions = {
 
       },
     }),
+    
 
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,

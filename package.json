@@ -10,7 +10,6 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "@auth/firebase-adapter": "^1.0.3",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@next-auth/prisma-adapter": "^1.0.7",
@@ -25,6 +24,7 @@
     "firebase-admin": "^11.11.0",
     "formik": "^2.4.5",
     "next": "13.5.6",
+    "next-auth": "^4.24.5",
     "primeflex": "^3.3.1",
     "primeicons": "^6.0.1",
     "primereact": "^10.5.0",
@@ -39,10 +39,10 @@
     "autoprefixer": "^10",
     "eslint": "^8",
     "eslint-config-next": "13.5.6",
-    "postcss": "^8",
+    "postcss": "^8.4.35",
     "prettier": "3.2.5",
     "prisma": "^5.9.1",
-    "tailwindcss": "^3",
+    "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   }

@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import bcrypt from 'bcrypt';
 
-export async function getById(objId: number, res: NextApiResponse, model: any) {
+export async function getById(objId: string, res: NextApiResponse, model: any, filterOptions : {} = {}) {
   try {
-    const obj = await model.findUnique({ where: { id: objId } })
+    const obj = await model.findUnique({ where: { id: objId , ...filterOptions} })
     if (obj) {
       res.status(200).json(obj)
     } else {
@@ -18,10 +18,11 @@ export async function getById(objId: number, res: NextApiResponse, model: any) {
 export async function getAll(
   req: NextApiRequest,
   res: NextApiResponse,
-  model: any
+  model: any,
+  filterOptions : {} = {}
 ) {
   try {
-    const allObj = await model.findMany()
+    const allObj = await model.findMany({where : filterOptions})
     res.status(200).json(allObj)
   } catch (error) {
     console.error('Error fetching :', error)
@@ -35,6 +36,7 @@ export async function create(
   model: any
 ) {
   try {
+
     const newObj = await model.create({ data: req.body })
     res.status(201).json(newObj)
   } catch (error) {
@@ -46,16 +48,17 @@ export async function create(
 export async function update(
   req: NextApiRequest,
   res: NextApiResponse,
-  model: any
+  model: any,
+  filterOptions : {} = {}
 ) {
-  const objId = parseInt(req.query.id as string, 10)
-  if (isNaN(objId)) {
+  const objId = req.query.id as string
+  if (!objId) {
     return res.status(400).json({ error: 'Invalid ID' })
   }
 
   try {
     const updatedObj = await model.update({
-      where: { id: objId },
+      where: { id: objId , ...filterOptions},
       data: req.body,
     })
     res.status(200).json(updatedObj)
@@ -68,15 +71,16 @@ export async function update(
 export async function remove(
   req: NextApiRequest,
   res: NextApiResponse,
-  model: any
+  model: any,
+  filterOptions : {} = {}
 ) {
-  const objId = parseInt(req.query.id as string, 10)
-  if (isNaN(objId)) {
+  const objId =  req.query.id as string
+  if (!objId) {
     return res.status(400).json({ error: 'Invalid ID' })
   }
 
   try {
-    await model.delete({ where: { id: objId } })
+    await model.delete({ where: { id: objId, ...filterOptions } })
     res.status(200).json({ message: 'deleted successfully' })
   } catch (error) {
     console.error('Error deleting :', error)
