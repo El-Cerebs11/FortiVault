@@ -3,24 +3,28 @@
 import { signOut, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 
-
 export default function Home() {
   const session = useSession()
 
-
-
   const router = useRouter()
 
-
   return (
-    <div className='bg-grey-900 h-screen flex items-center p-6'>
+    <div className='flex items-center h-screen py-16'>
       <div className='mx-auto max-w-2xl py-28 sm:py-30 lg:py-40'>
         <div className='text-center'>
           <h1 className='text-4xl font-bold tracking-tight  sm:text-6xl dark:text-white'>
             Welcome to FortiVault
           </h1>
           <p className='mt-6 text-lg leading-8 text-black dark:text-white'>
-            Welcome <span hidden={session?.data?.user?.email ?  false :true} className='bg-green-100 text-green-800 font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300'>{session?.data?.user?.email}</span>  to our secure password manager! Your security matters to us. Store and manage passwords with ease. Say hello to worry-free logins!
+            Welcome{' '}
+            <span
+              hidden={session?.data?.user?.email ? false : true}
+              className='bg-green-100 text-green-800 font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300'
+            >
+              {session?.data?.user?.email}
+            </span>{' '}
+            to our secure password manager! Your security matters to us. Store
+            and manage passwords with ease. Say hello to worry-free logins!
           </p>
           <div className='mt-10 flex items-center justify-center gap-x-6'>
             <button
@@ -29,11 +33,9 @@ export default function Home() {
             >
               Get started
             </button>
-        
           </div>
         </div>
       </div>
-      </div>
-
+    </div>
   )
 }

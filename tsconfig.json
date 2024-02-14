@@ -23,6 +23,13 @@
     },
     "types": ["next-auth"]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "pages/api/auth/[...nextauth].ts", "app/loading.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "pages/api/auth/[...nextauth].ts",
+    "app/loading.tsx"
+  ],
   "exclude": ["node_modules"]
 }
