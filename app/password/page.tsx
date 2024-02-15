@@ -327,13 +327,14 @@ export default function ProductsDemo() {
     let showPasswordForm = showPassPhraseInput && (clickedRow == rowData)
     return (
 
-      <div className='flex flex-wrap gap-2'>
+      <div className='flex flex-wrap gap-2 '>
         <Button
           icon={'pi pi-eye' + (showPasswordForm ? '-slash' : '')}
           rounded
-          style={{ fontSize: '1rem' }}
+          size='small'
           outlined
           severity='help'
+          className='h-10'
           onClick={() => {
             setClickedRow(rowData);
             setShowPassPhraseInput(!showPassPhraseInput); setRealPassword(''); formik.resetForm()
@@ -341,16 +342,18 @@ export default function ProductsDemo() {
         />
 
         <div hidden={!showPasswordForm} >
-          <div className='flex'>
+          <div className=''>
             <InputText
               value={formik.values['passPhrase']}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 formik.setFieldValue('passPhrase', e.target.value)
               }
+              size='small'
             />
             <Button
               label='ok'
               className=''
+              size='small'
               severity='secondary'
               onClick={() => decryptClick(rowData)}
             />
@@ -376,7 +379,7 @@ export default function ProductsDemo() {
 
   return (
     <PrimeReactProvider value={{ unstyled: true, pt: Tailwind }}>
-      <div className='container mx-auto py-3 pb-auto'>
+      <div className='container mx-auto py-3'>
         <Toast ref={toast} />
         <div className='card'>
           <Toolbar className='mb-4' left={leftToolbarTemplate}></Toolbar>
@@ -386,23 +389,23 @@ export default function ProductsDemo() {
             value={passwordManagers}
             dataKey='id'
             paginator
-            onCellSelect={(cell) => {
-              console.log(cell);
-            }}
+            size='small'
             rows={10}
             rowsPerPageOptions={[10, 20, 50]}
             paginatorTemplate='FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown'
             currentPageReportTemplate='Showing {first} to {last} of {totalRecords} passwords'
-            className='rounded'
+            className='rounded pb-auto'
           >
             <Column
               field='serviceName'
               header='Service Name'
+              filter
               sortable
             ></Column>
             <Column
               field='serviceUrl'
               header='URL'
+              filter
               sortable
             ></Column>
             <Column
