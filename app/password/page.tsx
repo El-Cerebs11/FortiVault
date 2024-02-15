@@ -22,7 +22,7 @@ import { DialogStatus, decryptAES, encryptAES } from '@/services/queryClient'
 
 
 interface PasswordManager extends DefaultPasswordManager {
-  passPhrase: string; 
+  passPhrase: string;
 }
 
 
@@ -69,6 +69,7 @@ export default function ProductsDemo() {
   const closeDialog = () => {
     setShowDialog(false)
     formik.resetForm()
+    // setDialogStatus(DialogStatus.Off)
   }
 
 
@@ -100,10 +101,9 @@ export default function ProductsDemo() {
 
     onSubmit: async (data: PasswordManager) => {
       if (data) {
-        data.password = encryptAES(data.password, data.passPhrase)
+        data.password = dialogStatus != DialogStatus.Delete ? encryptAES(data.password, data.passPhrase) : data.password
         const { id, passPhrase, ...cleanData } = data
         let request: AxiosRequestConfig = {
-
         };
 
         switch (dialogStatus) {
@@ -161,13 +161,39 @@ export default function ProductsDemo() {
             detail: errorMessage,
           })
         }
-        setDialogStatus(DialogStatus.Off)
+      
       }
     },
   })
 
 
 
+
+  function generateStrongPassword(length: number): string {
+    const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
+    const numberChars = '0123456789';
+    const specialChars = '!@#$%^&*()-_=+';
+
+    const allChars = uppercaseChars + lowercaseChars + numberChars + specialChars;
+
+    let password = '';
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * allChars.length);
+      password += allChars[randomIndex];
+    }
+
+    return password;
+  }
+
+
+
+
+
+  const generatePasswordClick = () => {
+    formik.setFieldValue('password', generateStrongPassword(12))
+
+  }
   const leftToolbarTemplate = () => {
     return (
       <div className='flex flex-wrap gap-2'>
@@ -184,13 +210,13 @@ export default function ProductsDemo() {
   const editPassword = (rowData: PasswordManager) => {
     setDialogStatus(DialogStatus.Update)
     openDialog()
-    formik.setValues(rowData)
+    formik.setValues({...rowData , passPhrase : ''})
   }
 
   const deletePassword = (rowData: PasswordManager) => {
     setDialogStatus(DialogStatus.Delete)
     openDialog()
-    formik.setValues(rowData)
+    formik.setValues({...rowData , passPhrase : 'FOR.PASSING.ERROR'})
   }
   const actionBodyTemplate = (rowData: PasswordManager) => {
     return (
@@ -274,16 +300,16 @@ export default function ProductsDemo() {
 
   }
 
-const decryptClick = (rowData:PasswordManager)=>{
-  let _realPassword = decryptAES(rowData.password, formik.values['passPhrase'])
+  const decryptClick = (rowData: PasswordManager) => {
+    let _realPassword = decryptAES(rowData.password, formik.values['passPhrase'])
     setRealPassword(_realPassword)
-    if(_realPassword){
+    if (_realPassword) {
       toast.current?.show({
         severity: 'success',
         summary: 'Success',
       })
     }
-    else{
+    else {
       toast.current?.show({
         severity: 'error',
         summary: 'Error',
@@ -291,14 +317,14 @@ const decryptClick = (rowData:PasswordManager)=>{
       })
     }
 
-}
+  }
 
 
 
   const passwordBody = (rowData: PasswordManager) => {
 
 
-let showPasswordForm = showPassPhraseInput && (clickedRow == rowData)
+    let showPasswordForm = showPassPhraseInput && (clickedRow == rowData)
     return (
 
       <div className='flex flex-wrap gap-2'>
@@ -307,36 +333,37 @@ let showPasswordForm = showPassPhraseInput && (clickedRow == rowData)
           rounded
           style={{ fontSize: '1rem' }}
           outlined
-          className='f'
           severity='help'
-          onClick={() =>{ setClickedRow(rowData);
-           setShowPassPhraseInput(!showPassPhraseInput); setRealPassword('') ; formik.resetForm() }}
+          onClick={() => {
+            setClickedRow(rowData);
+            setShowPassPhraseInput(!showPassPhraseInput); setRealPassword(''); formik.resetForm()
+          }}
         />
 
         <div hidden={!showPasswordForm} >
           <div className='flex'>
             <InputText
-             value={formik.values['passPhrase']}
-             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-               formik.setFieldValue('passPhrase', e.target.value)
-             }
+              value={formik.values['passPhrase']}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                formik.setFieldValue('passPhrase', e.target.value)
+              }
             />
             <Button
               label='ok'
               className=''
               severity='secondary'
-              onClick={()=>decryptClick(rowData)}
+              onClick={() => decryptClick(rowData)}
             />
 
           </div>
-          <div className='flex flex-col'>
-          <span>{realPassword}</span>
-{realPassword &&
-<small className='text-green-600'>Decryption success</small> }
+          <div className='flex flex-col mt-3'>
+            <span>{realPassword}</span>
+            {realPassword &&
+              <small className='dark:text-green-400 text-green-800'>Decryption success</small>}
 
-{!realPassword &&
-<small className='text-red-600'>Decryption needs passphrase</small> }
-    
+            {!realPassword &&
+              <small className='dark:text-red-400 text-red-800'>Decryption needs passphrase</small>}
+
           </div>
 
 
@@ -345,6 +372,7 @@ let showPasswordForm = showPassPhraseInput && (clickedRow == rowData)
       </div>
     )
   }
+
 
   return (
     <PrimeReactProvider value={{ unstyled: true, pt: Tailwind }}>
@@ -358,7 +386,8 @@ let showPasswordForm = showPassPhraseInput && (clickedRow == rowData)
             value={passwordManagers}
             dataKey='id'
             paginator
-            onCellSelect={(cell)=>{console.log(cell);
+            onCellSelect={(cell) => {
+              console.log(cell);
             }}
             rows={10}
             rowsPerPageOptions={[10, 20, 50]}
@@ -401,10 +430,24 @@ let showPasswordForm = showPassPhraseInput && (clickedRow == rowData)
           onHide={() => closeDialog()}
           footer={dialogFooter}
         >
-          {inputTemplate('serviceName', 'Service Name')}
-          {inputTemplate('serviceUrl', 'Service Url')}
-          {inputTemplate('password', 'Password')}
-          {inputTemplate('passPhrase', 'PassPhrase')}
+          {(dialogStatus != DialogStatus.Delete) && (<>
+            {inputTemplate('serviceName', 'Service Name')}
+            {inputTemplate('serviceUrl', 'Service Url')}
+
+            <div>
+              {inputTemplate('password', 'Password')}
+              <Button
+                label='Generate'
+                rounded
+                style={{ fontSize: '1rem' }}
+                outlined
+                severity='warning'
+                onClick={generatePasswordClick}
+              />
+            </div>
+            {inputTemplate('passPhrase', 'PassPhrase')}
+          </>)}
+
         </Dialog>
       </div>
     </PrimeReactProvider>
