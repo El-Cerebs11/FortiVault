@@ -425,11 +425,13 @@ export default function ProductsDemo() {
           </DataTable>
         </div>
 
-        <Dialog
+     
+      </div>
+
+      <Dialog
           visible={showDialog}
-          style={{ width: '32rem' }}
-          header='Password manager'
-          modal
+          style={{maxHeight : '300rem'}}
+          header='Password manager'      
           onHide={() => closeDialog()}
           footer={dialogFooter}
         >
@@ -452,7 +454,11 @@ export default function ProductsDemo() {
           </>)}
 
         </Dialog>
-      </div>
+
+     
     </PrimeReactProvider>
+
+
+
   )
 }
