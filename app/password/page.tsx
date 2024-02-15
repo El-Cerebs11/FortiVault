@@ -11,15 +11,19 @@ import { Dialog } from 'primereact/dialog'
 import { PrimeReactProvider } from 'primereact/api'
 import Tailwind from 'primereact/passthrough/tailwind'
 import axios, { AxiosRequestConfig } from 'axios'
-import { PasswordManager } from '@prisma/client'
+import { PasswordManager as DefaultPasswordManager } from '@prisma/client'
 import { useFormik } from 'formik'
 import { InputText } from 'primereact/inputtext'
 import { useSession } from 'next-auth/react'
 import 'primeicons/primeicons.css'
 import { useRouter } from 'next/navigation'
-import { DialogStatus } from '@/services/enumeration'
+import { DialogStatus, decryptAES, encryptAES } from '@/services/queryClient'
 
 
+
+interface PasswordManager extends DefaultPasswordManager {
+  passPhrase: string; 
+}
 
 
 
@@ -36,12 +40,13 @@ export default function ProductsDemo() {
   const toast = useRef<Toast>(null)
   const dt = useRef<DataTable<PasswordManager[]>>(null)
 
-  const emptyPasswordManager: PasswordManager = {
+  const emptyPasswordManager: PasswordManager & {} = {
     id: '',
     userId: '',
     serviceName: '',
     serviceUrl: '',
     password: '',
+    passPhrase: ''
   }
 
   const [refresh, setRefresh] = useState(0)
@@ -50,19 +55,21 @@ export default function ProductsDemo() {
     []
   )
   const [showDialog, setShowDialog] = useState(false)
-const [dialogStatus, setDialogStatus] = useState<DialogStatus>(DialogStatus.Off)
+  const [dialogStatus, setDialogStatus] = useState<DialogStatus>(DialogStatus.Off)
+
+  const [showPassPhraseInput, setShowPassPhraseInput] = useState(false)
+  const [realPassword, setRealPassword] = useState<string>('')
+  const [clickedRow, setClickedRow] = useState<PasswordManager>()
+  const openDialog = () => {
+    formik.resetForm()
+    setShowDialog(true)
+  }
 
 
-const openDialog = ()=>{
-  formik.resetForm()
-  setShowDialog(true)
-}
-
-
-const closeDialog = ()=>{
-  setShowDialog(false)
-  formik.resetForm()
-}
+  const closeDialog = () => {
+    setShowDialog(false)
+    formik.resetForm()
+  }
 
 
 
@@ -82,7 +89,7 @@ const closeDialog = ()=>{
     validate: (data: PasswordManager) => {
       let errors: { [key: string]: string } = {};
 
-  ['serviceName', 'password'].forEach((element) => {
+      ['serviceName', 'password', 'passPhrase'].forEach((element) => {
         let key = element as keyof PasswordManager
         if (data[key] == '') {
           errors[key] = 'This field is required !'
@@ -93,43 +100,44 @@ const closeDialog = ()=>{
 
     onSubmit: async (data: PasswordManager) => {
       if (data) {
-        const { id, ...cleanData } = data
-        let request :AxiosRequestConfig =  {
-         
+        data.password = encryptAES(data.password, data.passPhrase)
+        const { id, passPhrase, ...cleanData } = data
+        let request: AxiosRequestConfig = {
+
         };
 
         switch (dialogStatus) {
           case DialogStatus.Create:
-            request =  {
+            request = {
               method: 'POST',
               url: apiUrl,
               data: cleanData
             };
             break;
-            case DialogStatus.Update:
-              request =  {
-                method: 'PUT',
-                url: apiUrl,
-                data: cleanData,
-                params:{id: id}
-              };
-              break;
+          case DialogStatus.Update:
+            request = {
+              method: 'PUT',
+              url: apiUrl,
+              data: cleanData,
+              params: { id: id }
+            };
+            break;
 
-              case DialogStatus.Delete:
-                request =  {
-                  method: 'DELETE',
-                  url: apiUrl,
-                  data: cleanData,
-                  params:{id: id}
-                };
-                break;
+          case DialogStatus.Delete:
+            request = {
+              method: 'DELETE',
+              url: apiUrl,
+              data: cleanData,
+              params: { id: id }
+            };
+            break;
           default:
             break;
         }
 
 
         try {
-         
+
           const response = await axios(request)
           setRefresh(refresh + 1)
           toast.current?.show({
@@ -137,8 +145,8 @@ const closeDialog = ()=>{
             summary: 'Success',
           })
           closeDialog()
-        
-        
+
+
 
         } catch (error) {
           const errorMessage =
@@ -167,7 +175,7 @@ const closeDialog = ()=>{
           label='New'
           icon='pi pi-plus'
           severity='success'
-          onClick={()=>{openDialog() ; setDialogStatus(DialogStatus.Create);}}
+          onClick={() => { openDialog(); setDialogStatus(DialogStatus.Create); }}
         />
       </div>
     )
@@ -235,35 +243,107 @@ const closeDialog = ()=>{
     )
   }
 
-  const dialogFooter = ()=>{
-let  label : string = ''
-switch (dialogStatus) {
-  case DialogStatus.Create:
-    label = 'Add'
-    break;
-    case DialogStatus.Update:
-      label = 'Update'
-      break;
+  const dialogFooter = () => {
+    let label: string = ''
+    switch (dialogStatus) {
+      case DialogStatus.Create:
+        label = 'Add'
+        break;
+      case DialogStatus.Update:
+        label = 'Update'
+        break;
       case DialogStatus.Delete:
-    label = 'Delete'
-    break;
-  default:
-    break;
-}
-return   (
-  
-  <React.Fragment>
-    <Button label='Cancel' icon='pi pi-times' outlined onClick={()=>closeDialog()} />
-    <Button
-      label={label}
-      icon='pi pi-check'
-      onClick={(e) => {
-        formik.submitForm()
-      }}
-    />
-  </React.Fragment>
-)
+        label = 'Delete'
+        break;
+      default:
+        break;
+    }
+    return (
 
+      <React.Fragment>
+        <Button label='Cancel' icon='pi pi-times' outlined onClick={() => closeDialog()} />
+        <Button
+          label={label}
+          icon='pi pi-check'
+          onClick={(e) => {
+            formik.submitForm()
+          }}
+        />
+      </React.Fragment>
+    )
+
+  }
+
+const decryptClick = (rowData:PasswordManager)=>{
+  let _realPassword = decryptAES(rowData.password, formik.values['passPhrase'])
+    setRealPassword(_realPassword)
+    if(_realPassword){
+      toast.current?.show({
+        severity: 'success',
+        summary: 'Success',
+      })
+    }
+    else{
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Bad passphrase'
+      })
+    }
+
+}
+
+
+
+  const passwordBody = (rowData: PasswordManager) => {
+
+
+let showPasswordForm = showPassPhraseInput && (clickedRow == rowData)
+    return (
+
+      <div className='flex flex-wrap gap-2'>
+        <Button
+          icon={'pi pi-eye' + (showPasswordForm ? '-slash' : '')}
+          rounded
+          style={{ fontSize: '1rem' }}
+          outlined
+          className='f'
+          severity='help'
+          onClick={() =>{ setClickedRow(rowData);
+           setShowPassPhraseInput(!showPassPhraseInput); setRealPassword('') ; formik.resetForm() }}
+        />
+
+        <div hidden={!showPasswordForm} >
+          <div className='flex'>
+            <InputText
+             value={formik.values['passPhrase']}
+             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+               formik.setFieldValue('passPhrase', e.target.value)
+             }
+            />
+            <Button
+              label='ok'
+              className=''
+              severity='secondary'
+              onClick={()=>decryptClick(rowData)}
+            />
+
+          </div>
+          <div className='flex flex-col'>
+          <span>{realPassword}</span>
+{realPassword &&
+<small className='text-green-600'>Decryption success</small> }
+
+{!realPassword &&
+<small className='text-red-600'>Decryption needs passphrase</small> }
+    
+          </div>
+
+
+        </div>
+
+      </div>
+    )
   }
 
   return (
@@ -278,6 +358,8 @@ return   (
             value={passwordManagers}
             dataKey='id'
             paginator
+            onCellSelect={(cell)=>{console.log(cell);
+            }}
             rows={10}
             rowsPerPageOptions={[10, 20, 50]}
             paginatorTemplate='FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown'
@@ -288,24 +370,25 @@ return   (
               field='serviceName'
               header='Service Name'
               sortable
-              style={{ minWidth: '12rem' }}
             ></Column>
             <Column
               field='serviceUrl'
               header='URL'
               sortable
-              style={{ minWidth: '16rem' }}
             ></Column>
             <Column
               field='password'
-              header='password'
+              header='Encrypted Password'
               sortable
-              style={{ minWidth: '16rem' }}
+            ></Column>
+            <Column
+              header='Password'
+              sortable
+              body={passwordBody}
             ></Column>
             <Column
               body={actionBodyTemplate}
               exportable={false}
-              style={{ minWidth: '12rem' }}
             ></Column>
           </DataTable>
         </div>
@@ -315,12 +398,13 @@ return   (
           style={{ width: '32rem' }}
           header='Password manager'
           modal
-          onHide={()=>closeDialog()}
+          onHide={() => closeDialog()}
           footer={dialogFooter}
         >
-          {inputTemplate('serviceName', 'service Name')}
-          {inputTemplate('serviceUrl', 'service Url')}
-          {inputTemplate('password', 'password')}
+          {inputTemplate('serviceName', 'Service Name')}
+          {inputTemplate('serviceUrl', 'Service Url')}
+          {inputTemplate('password', 'Password')}
+          {inputTemplate('passPhrase', 'PassPhrase')}
         </Dialog>
       </div>
     </PrimeReactProvider>

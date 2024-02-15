@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client'
-import { getById, getAll, create, update, remove } from '@/services/Query'
+import { getById, getAll, create, update, remove } from '@/services/queryServer'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/pages/api/auth/[...nextauth]'
 
@@ -27,6 +27,7 @@ export default async function handler(
     }
   } else if (req.method === 'POST') {
     req.body.userId = filterOptions.userId
+
     return create(req, res, model)
   } else if (req.method === 'PUT') {
     return update(req, res, model, filterOptions)

@@ -3,8 +3,7 @@ import GoogleProvider from 'next-auth/providers/google'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { PrismaClient } from '@prisma/client'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import { compareHash, hashString } from '@/services/Query'
-import { DefaultSession } from 'next-auth' // Assuming next-auth is a module or file
+import { compareHash, hashString } from '@/services/queryServer'
 
 const prisma = new PrismaClient()
 
