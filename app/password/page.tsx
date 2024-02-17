@@ -1,6 +1,5 @@
 'use client'
 import React, { useState, useEffect, useRef } from 'react'
-import { classNames } from 'primereact/utils'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 
@@ -69,7 +68,6 @@ export default function ProductsDemo() {
   const closeDialog = () => {
     setShowDialog(false)
     formik.resetForm()
-    // setDialogStatus(DialogStatus.Off)
   }
 
 
@@ -259,9 +257,9 @@ export default function ProductsDemo() {
 
         <InputText
           id={name}
-          value={formik.values[name as keyof PasswordManager] as string}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            formik.setFieldValue(name, e.target.value)
+          value={formik.values[name] as string}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>{
+            formik.setFieldValue(name, e.target.value)}
           }
         />
         {getFormErrorMessage(name)}

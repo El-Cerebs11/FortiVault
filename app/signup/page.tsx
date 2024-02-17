@@ -8,17 +8,19 @@ import { signIn, useSession } from 'next-auth/react'
 import { useFormik } from 'formik'
 import axios from 'axios'
 
+interface FormDataType {
+  email: string
+  password: string
+  passwordAgain: string
+}
+
+
 export default function SignUp() {
-  const [serverErrors, setServerErrors] = useState('')
   const router = useRouter()
 
   const session = useSession()
 
-  type FormDataType = {
-    email: string
-    password: string
-    passwordAgain: string
-  }
+
   const initialValues: FormDataType = {
     email: '',
     password: '',
@@ -29,18 +31,18 @@ export default function SignUp() {
     initialValues: initialValues,
     validate: (data: FormDataType) => {
       let errors: { [key: string]: string } = {}
-      //check is empty
-      ;['email', 'password', 'passwordAgain'].forEach((element: string) => {
-        if (data[element as keyof FormDataType] == '') {
-          errors[element as keyof FormDataType] = 'This field is required !'
-        }
+        //check is empty
+        ;['email', 'password', 'passwordAgain'].forEach((element: string) => {
+          if (data[element as keyof FormDataType] == '') {
+            errors[element as keyof FormDataType] = 'This field is required !'
+          }
 
-        if (data.password != data.passwordAgain) {
-          let ePass = 'Passwords do not match'
-          errors['password'] = ePass
-          errors['passwordAgain'] = ePass
-        }
-      })
+          if (data.password != data.passwordAgain) {
+            let ePass = 'Passwords do not match'
+            errors['password'] = ePass
+            errors['passwordAgain'] = ePass
+          }
+        })
       return errors
     },
 
@@ -202,28 +204,7 @@ export default function SignUp() {
             <span>sign up with Google</span>
           </button>
 
-          <div hidden={!serverErrors}>
-            <div
-              className='flex items-center p-4 mb-4 mt-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-red-900'
-              role='alert'
-            >
-              <svg
-                className='flex-shrink-0 inline w-4 h-4 mr-3'
-                aria-hidden='true'
-                xmlns='http://www.w3.org/2000/svg'
-                fill='currentColor'
-                viewBox='0 0 20 20'
-              >
-                <path d='M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z' />
-              </svg>
-              <span className='sr-only'>Info</span>
-              <div>
-                <span className='font-medium dark:text-white'>
-                  {serverErrors}
-                </span>
-              </div>
-            </div>
-          </div>
+       
 
           <p className='mt-10 text-center text-sm text-gray-500'>
             Already member?{' '}

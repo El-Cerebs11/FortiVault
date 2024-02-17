@@ -52,7 +52,7 @@ export default function Navbar() {
   ]
 
   return (
-    <div className='bg-white dark:bg-gray-900'>
+    <div className='bg-gray-300 shadow dark:bg-gray-900'>
       <Disclosure as='nav'>
         {({ open }) => (
           <>
