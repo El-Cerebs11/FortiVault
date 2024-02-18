@@ -45,14 +45,11 @@ export default function SignIn() {
     onSubmit:async (data: FormDataType) => {
       if (data) {
 
-      let resp = await  signIn('credentials', {
+      const resp = await  signIn('credentials', {
           redirect: false,
           email: formik.values['email'],
           password: formik.values['password'],
         })
-
-
-        console.log(resp);
 
         if(resp?.ok){
           router.push('/')
@@ -95,10 +92,10 @@ export default function SignIn() {
         </PrimeReactProvider>
         <div className='sm:mx-auto sm:w-full sm:max-w-sm'>
           <Image
-            className='mx-auto h-20 w-auto'
+            className='mx-auto w-auto h-auto'
             src={Logo}
-            width='200'
-            height='80'
+            width='100'
+            height='100'
             alt='logo'
           />
           <h2 className='mt-10 text-center text-2xl font-bold leading-9 text-white-900 dark:text-white'>
