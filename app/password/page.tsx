@@ -252,11 +252,12 @@ export default function ProductsDemo() {
 
   const inputTemplate = (name: keyof PasswordManager, label: string) => {
     return (
-      <div className='flex flex-col gap-3 mt-6'>
-        <label htmlFor={name}>{label}</label>
+      <div className='flex flex-col gap-3 mt-2'>
+        <label className='font-bold' htmlFor={name}>{label}</label>
 
         <InputText
           id={name}
+          className='p-inputtext-sm'
           value={formik.values[name] as string}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>{
             formik.setFieldValue(name, e.target.value)}
@@ -288,7 +289,7 @@ export default function ProductsDemo() {
         <Button label='Cancel' icon='pi pi-times' outlined onClick={() => closeDialog()} />
         <Button
           label={label}
-          icon='pi pi-check'
+          icon={'pi ' + (formik.isSubmitting? 'pi-spin pi-spinner ' :  'pi-check ')}
           onClick={(e) => {
             formik.submitForm()
           }}
@@ -428,10 +429,11 @@ export default function ProductsDemo() {
 
       <Dialog
           visible={showDialog}
-          style={{maxHeight : '300rem'}}
-          header='Password manager'      
+          header='Password manager'    
+          modal  
           onHide={() => closeDialog()}
           footer={dialogFooter}
+          className='text-xs'
         >
           {(dialogStatus != DialogStatus.Delete) && (<>
             {inputTemplate('serviceName', 'Service Name')}
@@ -445,6 +447,7 @@ export default function ProductsDemo() {
                 style={{ fontSize: '1rem' }}
                 outlined
                 severity='warning'
+                className='mb-2'
                 onClick={generatePasswordClick}
               />
             </div>
