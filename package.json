@@ -1,5 +1,5 @@
 {
-  "name": "apps-club",
+  "name": "FortiVault",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -32,7 +32,8 @@
     "primereact": "^10.5.0",
     "react": "^18",
     "react-dom": "^18",
-    "sass": "^1.70.0"
+    "sass": "^1.70.0",
+    "sharp": "^0.33.2"
   },
   "devDependencies": {
     "@types/node": "^20.11.16",

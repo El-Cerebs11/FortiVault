@@ -18,13 +18,9 @@ import 'primeicons/primeicons.css'
 import { useRouter } from 'next/navigation'
 import { DialogStatus, decryptAES, encryptAES } from '@/services/queryClient'
 
-
-
 interface PasswordManager extends DefaultPasswordManager {
-  passPhrase: string;
+  passPhrase: string
 }
-
-
 
 export default function ProductsDemo() {
   const router = useRouter()
@@ -45,7 +41,7 @@ export default function ProductsDemo() {
     serviceName: '',
     serviceUrl: '',
     password: '',
-    passPhrase: ''
+    passPhrase: '',
   }
 
   const [refresh, setRefresh] = useState(0)
@@ -54,7 +50,9 @@ export default function ProductsDemo() {
     []
   )
   const [showDialog, setShowDialog] = useState(false)
-  const [dialogStatus, setDialogStatus] = useState<DialogStatus>(DialogStatus.Off)
+  const [dialogStatus, setDialogStatus] = useState<DialogStatus>(
+    DialogStatus.Off
+  )
 
   const [showPassPhraseInput, setShowPassPhraseInput] = useState(false)
   const [realPassword, setRealPassword] = useState<string>('')
@@ -64,13 +62,10 @@ export default function ProductsDemo() {
     setShowDialog(true)
   }
 
-
   const closeDialog = () => {
     setShowDialog(false)
     formik.resetForm()
   }
-
-
 
   useEffect(() => {
     axios
@@ -86,9 +81,9 @@ export default function ProductsDemo() {
   const formik = useFormik({
     initialValues: emptyPasswordManager,
     validate: (data: PasswordManager) => {
-      let errors: { [key: string]: string } = {};
+      let errors: { [key: string]: string } = {}
 
-      ['serviceName', 'password', 'passPhrase'].forEach((element) => {
+      ;['serviceName', 'password', 'passPhrase'].forEach((element) => {
         let key = element as keyof PasswordManager
         if (data[key] == '') {
           errors[key] = 'This field is required !'
@@ -99,43 +94,43 @@ export default function ProductsDemo() {
 
     onSubmit: async (data: PasswordManager) => {
       if (data) {
-        data.password = dialogStatus != DialogStatus.Delete ? encryptAES(data.password, data.passPhrase) : data.password
+        data.password =
+          dialogStatus != DialogStatus.Delete
+            ? encryptAES(data.password, data.passPhrase)
+            : data.password
         const { id, passPhrase, ...cleanData } = data
-        let request: AxiosRequestConfig = {
-        };
+        let request: AxiosRequestConfig = {}
 
         switch (dialogStatus) {
           case DialogStatus.Create:
             request = {
               method: 'POST',
               url: apiUrl,
-              data: cleanData
-            };
-            break;
+              data: cleanData,
+            }
+            break
           case DialogStatus.Update:
             request = {
               method: 'PUT',
               url: apiUrl,
               data: cleanData,
-              params: { id: id }
-            };
-            break;
+              params: { id: id },
+            }
+            break
 
           case DialogStatus.Delete:
             request = {
               method: 'DELETE',
               url: apiUrl,
               data: cleanData,
-              params: { id: id }
-            };
-            break;
+              params: { id: id },
+            }
+            break
           default:
-            break;
+            break
         }
 
-
         try {
-
           const response = await axios(request)
           setRefresh(refresh + 1)
           toast.current?.show({
@@ -143,9 +138,6 @@ export default function ProductsDemo() {
             summary: 'Success',
           })
           closeDialog()
-
-
-
         } catch (error) {
           const errorMessage =
             typeof error === 'string'
@@ -159,38 +151,30 @@ export default function ProductsDemo() {
             detail: errorMessage,
           })
         }
-      
       }
     },
   })
 
-
-
-
   function generateStrongPassword(length: number): string {
-    const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
-    const numberChars = '0123456789';
-    const specialChars = '!@#$%^&*()-_=+';
+    const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz'
+    const numberChars = '0123456789'
+    const specialChars = '!@#$%^&*()-_=+'
 
-    const allChars = uppercaseChars + lowercaseChars + numberChars + specialChars;
+    const allChars =
+      uppercaseChars + lowercaseChars + numberChars + specialChars
 
-    let password = '';
+    let password = ''
     for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * allChars.length);
-      password += allChars[randomIndex];
+      const randomIndex = Math.floor(Math.random() * allChars.length)
+      password += allChars[randomIndex]
     }
 
-    return password;
+    return password
   }
-
-
-
-
 
   const generatePasswordClick = () => {
     formik.setFieldValue('password', generateStrongPassword(12))
-
   }
   const leftToolbarTemplate = () => {
     return (
@@ -199,7 +183,10 @@ export default function ProductsDemo() {
           label='New'
           icon='pi pi-plus'
           severity='success'
-          onClick={() => { openDialog(); setDialogStatus(DialogStatus.Create); }}
+          onClick={() => {
+            openDialog()
+            setDialogStatus(DialogStatus.Create)
+          }}
         />
       </div>
     )
@@ -208,13 +195,13 @@ export default function ProductsDemo() {
   const editPassword = (rowData: PasswordManager) => {
     setDialogStatus(DialogStatus.Update)
     openDialog()
-    formik.setValues({...rowData , passPhrase : ''})
+    formik.setValues({ ...rowData, passPhrase: '' })
   }
 
   const deletePassword = (rowData: PasswordManager) => {
     setDialogStatus(DialogStatus.Delete)
     openDialog()
-    formik.setValues({...rowData , passPhrase : 'FOR.PASSING.ERROR'})
+    formik.setValues({ ...rowData, passPhrase: 'FOR.PASSING.ERROR' })
   }
   const actionBodyTemplate = (rowData: PasswordManager) => {
     return (
@@ -253,15 +240,17 @@ export default function ProductsDemo() {
   const inputTemplate = (name: keyof PasswordManager, label: string) => {
     return (
       <div className='flex flex-col gap-3 mt-2'>
-        <label className='font-bold' htmlFor={name}>{label}</label>
+        <label className='font-bold' htmlFor={name}>
+          {label}
+        </label>
 
         <InputText
           id={name}
           className='p-inputtext-sm'
           value={formik.values[name] as string}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>{
-            formik.setFieldValue(name, e.target.value)}
-          }
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            formik.setFieldValue(name, e.target.value)
+          }}
         />
         {getFormErrorMessage(name)}
       </div>
@@ -273,59 +262,60 @@ export default function ProductsDemo() {
     switch (dialogStatus) {
       case DialogStatus.Create:
         label = 'Add'
-        break;
+        break
       case DialogStatus.Update:
         label = 'Update'
-        break;
+        break
       case DialogStatus.Delete:
         label = 'Delete'
-        break;
+        break
       default:
-        break;
+        break
     }
     return (
-
       <React.Fragment>
-        <Button label='Cancel' icon='pi pi-times' outlined onClick={() => closeDialog()} />
+        <Button
+          label='Cancel'
+          icon='pi pi-times'
+          outlined
+          onClick={() => closeDialog()}
+        />
         <Button
           label={label}
-          icon={'pi ' + (formik.isSubmitting? 'pi-spin pi-spinner ' :  'pi-check ')}
+          icon={
+            'pi ' + (formik.isSubmitting ? 'pi-spin pi-spinner ' : 'pi-check ')
+          }
           onClick={(e) => {
             formik.submitForm()
           }}
         />
       </React.Fragment>
     )
-
   }
 
   const decryptClick = (rowData: PasswordManager) => {
-    let _realPassword = decryptAES(rowData.password, formik.values['passPhrase'])
+    let _realPassword = decryptAES(
+      rowData.password,
+      formik.values['passPhrase']
+    )
     setRealPassword(_realPassword)
     if (_realPassword) {
       toast.current?.show({
         severity: 'success',
         summary: 'Success',
       })
-    }
-    else {
+    } else {
       toast.current?.show({
         severity: 'error',
         summary: 'Error',
-        detail: 'Bad passphrase'
+        detail: 'Bad passphrase',
       })
     }
-
   }
 
-
-
   const passwordBody = (rowData: PasswordManager) => {
-
-
-    let showPasswordForm = showPassPhraseInput && (clickedRow == rowData)
+    let showPasswordForm = showPassPhraseInput && clickedRow == rowData
     return (
-
       <div className='flex flex-wrap gap-2 '>
         <Button
           icon={'pi pi-eye' + (showPasswordForm ? '-slash' : '')}
@@ -335,12 +325,14 @@ export default function ProductsDemo() {
           severity='help'
           className='h-10'
           onClick={() => {
-            setClickedRow(rowData);
-            setShowPassPhraseInput(!showPassPhraseInput); setRealPassword(''); formik.resetForm()
+            setClickedRow(rowData)
+            setShowPassPhraseInput(!showPassPhraseInput)
+            setRealPassword('')
+            formik.resetForm()
           }}
         />
 
-        <div hidden={!showPasswordForm} >
+        <div hidden={!showPasswordForm}>
           <div className=''>
             <InputText
               value={formik.values['passPhrase']}
@@ -356,25 +348,25 @@ export default function ProductsDemo() {
               severity='secondary'
               onClick={() => decryptClick(rowData)}
             />
-
           </div>
           <div className='flex flex-col mt-3'>
             <span>{realPassword}</span>
-            {realPassword &&
-              <small className='dark:text-green-400 text-green-800'>Decryption success</small>}
+            {realPassword && (
+              <small className='dark:text-green-400 text-green-800'>
+                Decryption success
+              </small>
+            )}
 
-            {!realPassword &&
-              <small className='dark:text-red-400 text-red-800'>Decryption needs passphrase</small>}
-
+            {!realPassword && (
+              <small className='dark:text-red-400 text-red-800'>
+                Decryption needs passphrase
+              </small>
+            )}
           </div>
-
-
         </div>
-
       </div>
     )
   }
-
 
   return (
     <PrimeReactProvider value={{ unstyled: true, pt: Tailwind }}>
@@ -401,41 +393,28 @@ export default function ProductsDemo() {
               filter
               sortable
             ></Column>
-            <Column
-              field='serviceUrl'
-              header='URL'
-              filter
-              sortable
-            ></Column>
+            <Column field='serviceUrl' header='URL' filter sortable></Column>
             <Column
               field='password'
               header='Encrypted Password'
               sortable
             ></Column>
-            <Column
-              header='Password'
-              sortable
-              body={passwordBody}
-            ></Column>
-            <Column
-              body={actionBodyTemplate}
-              exportable={false}
-            ></Column>
+            <Column header='Password' sortable body={passwordBody}></Column>
+            <Column body={actionBodyTemplate} exportable={false}></Column>
           </DataTable>
         </div>
-
-     
       </div>
 
       <Dialog
-          visible={showDialog}
-          header='Password manager'    
-          modal  
-          onHide={() => closeDialog()}
-          footer={dialogFooter}
-          className='text-xs'
-        >
-          {(dialogStatus != DialogStatus.Delete) && (<>
+        visible={showDialog}
+        header='Password manager'
+        modal
+        onHide={() => closeDialog()}
+        footer={dialogFooter}
+        className='text-xs'
+      >
+        {dialogStatus != DialogStatus.Delete && (
+          <>
             {inputTemplate('serviceName', 'Service Name')}
             {inputTemplate('serviceUrl', 'Service Url')}
 
@@ -452,14 +431,9 @@ export default function ProductsDemo() {
               />
             </div>
             {inputTemplate('passPhrase', 'PassPhrase')}
-          </>)}
-
-        </Dialog>
-
-     
+          </>
+        )}
+      </Dialog>
     </PrimeReactProvider>
-
-
-
   )
 }

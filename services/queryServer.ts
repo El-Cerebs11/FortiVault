@@ -1,17 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import bcrypt from 'bcrypt'
 
-
-
-
-
-
-
-
-
-
-
-
 export async function getById(
   objId: string,
   res: NextApiResponse,
@@ -128,7 +117,3 @@ export async function compareHash(
     throw error
   }
 }
-
-
-
-

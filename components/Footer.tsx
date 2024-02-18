@@ -11,7 +11,6 @@ const Footer = () => {
           </a>
           . All Rights Reserved.
         </span>
-    
       </div>
     </footer>
   )
