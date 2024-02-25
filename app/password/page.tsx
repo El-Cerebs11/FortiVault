@@ -83,12 +83,12 @@ export default function ProductsDemo() {
     validate: (data: PasswordManager) => {
       let errors: { [key: string]: string } = {}
 
-      ;['serviceName', 'password', 'passPhrase'].forEach((element) => {
-        let key = element as keyof PasswordManager
-        if (data[key] == '') {
-          errors[key] = 'This field is required !'
-        }
-      })
+        ;['serviceName', 'password', 'passPhrase'].forEach((element) => {
+          let key = element as keyof PasswordManager
+          if (data[key] == '') {
+            errors[key] = 'This field is required !'
+          }
+        })
       return errors
     },
 
@@ -409,29 +409,48 @@ export default function ProductsDemo() {
         visible={showDialog}
         header='Password manager'
         modal
+        style={{ width: '50vw' }}
         onHide={() => closeDialog()}
         footer={dialogFooter}
         className='text-xs'
       >
         {dialogStatus != DialogStatus.Delete && (
           <>
-            {inputTemplate('serviceName', 'Service Name')}
-            {inputTemplate('serviceUrl', 'Service Url')}
 
-            <div>
-              {inputTemplate('password', 'Password')}
-              <Button
-                label='Generate'
-                rounded
-                style={{ fontSize: '1rem' }}
-                outlined
-                severity='warning'
-                className='mb-2'
-                onClick={generatePasswordClick}
-              />
+            <div className='flex flex-row gap-4'>
+              <div className="flex-auto">
+                {inputTemplate('serviceName', 'Service Name')}
+
+              </div>
+              <div className="flex-auto">
+                {inputTemplate('serviceUrl', 'Service Url')}
+              </div>
             </div>
-            {inputTemplate('passPhrase', 'PassPhrase')}
-          </>
+
+            <div className='flex flex-row gap-4'>
+              <div className="flex-auto">
+                {inputTemplate('password', 'Password')}
+                <Button
+                  label='Generate'
+                  rounded
+                  size='small'
+                  outlined
+                  severity='warning'
+                  className='mb-2'
+                  onClick={generatePasswordClick}
+                />
+              </div>
+              <div className="flex-auto">
+              {inputTemplate('passPhrase', 'PassPhrase')}
+            </div>
+            </div>
+           
+          
+         
+
+
+
+        </>
         )}
       </Dialog>
     </PrimeReactProvider>
