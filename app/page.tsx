@@ -9,7 +9,7 @@ export default function Home() {
   const router = useRouter()
 
   return (
-    <div className='flex items-center h-screen py-16'>
+    <div className='flex items-center h-screen'>
       <div className='mx-auto max-w-2xl py-28 sm:py-30 lg:py-40'>
         <div className='text-center'>
           <h1 className='text-4xl font-bold tracking-tight  sm:text-6xl dark:text-white'>
