@@ -409,7 +409,7 @@ export default function ProductsDemo() {
         visible={showDialog}
         header='Password manager'
         modal
-        style={{ width: '50vw' }}
+        style={{ width: '90vw' }}
         onHide={() => closeDialog()}
         footer={dialogFooter}
         className='text-xs'
