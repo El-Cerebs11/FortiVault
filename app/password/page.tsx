@@ -16,7 +16,7 @@ import { InputText } from 'primereact/inputtext'
 import { useSession } from 'next-auth/react'
 import 'primeicons/primeicons.css'
 import { useRouter } from 'next/navigation'
-import { DialogStatus, decryptAES, encryptAES } from '@/services/queryClient'
+import { DialogStatus, decryptAES, encryptAES } from '@/utils/utilsClient'
 
 interface PasswordManager extends DefaultPasswordManager {
   passPhrase: string
@@ -409,10 +409,9 @@ export default function ProductsDemo() {
         visible={showDialog}
         header='Password manager'
         modal
-        style={{ width: '90vw' }}
+        style={{ width: '90vw', backgroundColor : 'red' }}
         onHide={() => closeDialog()}
         footer={dialogFooter}
-        className='text-xs'
       >
         {dialogStatus != DialogStatus.Delete && (
           <>

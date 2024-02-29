@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client'
-import { getById, getAll, create, update, remove } from '@/services/queryServer'
+import { getById, getAll, create, update, remove } from '@/utils/utilsServer'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/pages/api/auth/[...nextauth]'
 

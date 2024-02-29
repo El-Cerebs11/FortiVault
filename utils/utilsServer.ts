@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import bcrypt from 'bcrypt'
+import { User } from '@prisma/client'
+import nodemailer from 'nodemailer';
 
 export async function getById(
   objId: string,
@@ -43,6 +45,7 @@ export async function create(
   model: any
 ) {
   try {
+    sendVerificationMail()
     const newObj = await model.create({ data: req.body })
     res.status(201).json(newObj)
   } catch (error) {
@@ -116,4 +119,41 @@ export async function compareHash(
     console.error('Error comparing passwords:', error)
     throw error
   }
+}
+
+
+
+export function sendVerificationMail() {
+  
+
+ 
+  var transporter = nodemailer.createTransport({
+    host: "live.smtp.mailtrap.io",
+    port: 587,
+    auth: {
+      user: "api",
+      pass: "6aa7f20b0bc3e5aad5674639c2de4499"
+    }
+  });
+  
+  // Define email options
+  const mailOptions = {
+      from: 'donotreply@demomailtrap.com', // Sender address
+      to: 'adil.abbadi.1996@gmail.com', // List of recipients
+      subject: 'Test Email', // Subject line
+      text: 'This is a test email sent from Node.js', // Plain text body
+      html: '<b>This is a test email sent from <i>Node.js</i></b>', // HTML body
+  };
+  
+  // Send email
+  transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+          console.error('Error occurred:', error.message);
+          return;
+      }
+      console.log('Email sent successfully!');
+      console.log('Message ID:', info.messageId);
+  });
+
+  
 }

@@ -9,7 +9,7 @@ import {
   update,
   remove,
   hashString,
-} from '@/services/queryServer'
+} from '@/utils/utilsServer'
 
 const prisma = new PrismaClient()
 const model = prisma.user
