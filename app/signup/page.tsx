@@ -34,18 +34,18 @@ export default function SignUp() {
     initialValues: initialValues,
     validate: (data: FormDataType) => {
       let errors: { [key: string]: string } = {}
-        //check is empty
-        ;['email', 'password', 'passwordAgain'].forEach((element: string) => {
-          if (data[element as keyof FormDataType] == '') {
-            errors[element as keyof FormDataType] = 'This field is required !'
-          }
+      //check is empty
+      ;['email', 'password', 'passwordAgain'].forEach((element: string) => {
+        if (data[element as keyof FormDataType] == '') {
+          errors[element as keyof FormDataType] = 'This field is required !'
+        }
 
-          if (data.password != data.passwordAgain) {
-            let ePass = 'Passwords do not match'
-            errors['password'] = ePass
-            errors['passwordAgain'] = ePass
-          }
-        })
+        if (data.password != data.passwordAgain) {
+          let ePass = 'Passwords do not match'
+          errors['password'] = ePass
+          errors['passwordAgain'] = ePass
+        }
+      })
       return errors
     },
 
@@ -75,8 +75,6 @@ export default function SignUp() {
           email: cleanData.email,
           password: cleanData.email,
         })
-
-     
       }
     },
   })

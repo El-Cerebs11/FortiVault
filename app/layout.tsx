@@ -13,12 +13,12 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const session = await getServerSession(authOptions)
-  let realUser = null 
-  if(session){
+  let realUser = null
+  if (session) {
     const prisma = new PrismaClient()
-     realUser = await prisma.user.findUnique({
+    realUser = await prisma.user.findUnique({
       where: {
-       id:session?.user?.id
+        id: session?.user?.id,
       },
     })
     prisma.$disconnect()
@@ -29,7 +29,9 @@ export default async function RootLayout({
       <body>
         <SessionProvider session={session}>
           <Navbar />
-        { realUser?.emailVerified === null && (<EmailVerificationAlert></EmailVerificationAlert>)}
+          {realUser?.emailVerified === null && (
+            <EmailVerificationAlert></EmailVerificationAlert>
+          )}
           <div className='dark:bg-gray-800 min-h-screen'>{children}</div>
           <Footer />
         </SessionProvider>

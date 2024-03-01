@@ -14,14 +14,13 @@ import { PasswordManager as DefaultPasswordManager } from '@prisma/client'
 import { useFormik } from 'formik'
 import { InputText } from 'primereact/inputtext'
 import { DialogStatus, decryptAES, encryptAES } from '@/utils/utilsClient'
-import 'primeicons/primeicons.css';
-        
+import 'primeicons/primeicons.css'
+
 interface PasswordManager extends DefaultPasswordManager {
   passPhrase: string
 }
 
 export default function Password() {
-
   const toast = useRef<Toast>(null)
   const dt = useRef<DataTable<PasswordManager[]>>(null)
 
@@ -401,7 +400,7 @@ export default function Password() {
         visible={showDialog}
         header='Password manager'
         modal
-        style={{ width: '90vw'}}
+        style={{ width: '90vw' }}
         onHide={() => closeDialog()}
         footer={dialogFooter}
       >

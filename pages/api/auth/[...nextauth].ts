@@ -21,7 +21,7 @@ export const authOptions: AuthOptions = {
     session: async ({ session, user, token }) => {
       if (session?.user) {
         const tokenUser = token.user as User
-        session.user = { ...session.user, ...tokenUser } 
+        session.user = { ...session.user, ...tokenUser }
       }
       return session
     },

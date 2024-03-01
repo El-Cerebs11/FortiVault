@@ -129,10 +129,6 @@ export enum VerificationTokenIdentifier {
 }
 
 export async function sendVerificationMail(user: User) {
-
-
-
-
   const prisma = new PrismaClient()
 
   const verificationToken = await prisma.verificationToken.create({
@@ -144,20 +140,20 @@ export async function sendVerificationMail(user: User) {
     },
   })
 
-prisma.$disconnect()
+  prisma.$disconnect()
 
   const transporter = nodemailer.createTransport({
-    service: "Gmail",
-    host: "smtp.gmail.com",
+    service: 'Gmail',
+    host: 'smtp.gmail.com',
     port: 465,
     secure: true,
     auth: {
       user: process.env.GOOGLE_MAIL_USER,
       pass: process.env.GOOGLE_MAIL_PASS,
     },
-  });
+  })
 
-  const verificationUrl = `${process.env.NEXTAUTH_URL}/verify-email?token=${verificationToken.token}`;
+  const verificationUrl = `${process.env.NEXTAUTH_URL}/verify-email?token=${verificationToken.token}`
 
   const mailOptions = {
     from: process.env.GOOGLE_MAIL_USER, // Sender address
@@ -165,46 +161,36 @@ prisma.$disconnect()
     subject: 'FortiVault: Verify your email', // Subject line
     text: `Please verify your email by clicking the following link: ${verificationUrl}`, // Plain text body
     html: `<p>Please verify your email by clicking the link below:</p><a href="${verificationUrl}" target="_blank">Verify Email</a>`, // HTML body
-  };
+  }
 
   // Send email
   return transporter.sendMail(mailOptions)
 }
 
-
-
-
-
-export async function checkToken(user: User, token: string, identifier: VerificationTokenIdentifier) {
-
-
+export async function checkToken(
+  user: User,
+  token: string,
+  identifier: VerificationTokenIdentifier
+) {
   try {
-
-   
-      const prisma = new PrismaClient()
-      const verificationToken = await prisma.verificationToken.findUnique({
-        where: {
-          token: token,
-          userId: user.id,
-          identifier: identifier,
-          expires: {
-            gte: new Date()
-          },
+    const prisma = new PrismaClient()
+    const verificationToken = await prisma.verificationToken.findUnique({
+      where: {
+        token: token,
+        userId: user.id,
+        identifier: identifier,
+        expires: {
+          gte: new Date(),
         },
-      });
-    
-      
-      await prisma.$disconnect();
-      if (verificationToken == null) {
-        return false
-      }
-      else {
-        return true
-      }
+      },
+    })
 
-
-  
-
+    await prisma.$disconnect()
+    if (verificationToken == null) {
+      return false
+    } else {
+      return true
+    }
   } catch (error) {
     return false
   }
