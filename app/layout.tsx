@@ -4,8 +4,7 @@ import './globals.scss'
 import SessionProvider from './SessionProvider'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-
-
+import WarningAlert from '@/components/WarningAlert'
 
 export default async function RootLayout({
   children,
@@ -19,6 +18,7 @@ export default async function RootLayout({
       <body>
         <SessionProvider session={session}>
           <Navbar />
+          <WarningAlert title='hi' message='adilo'></WarningAlert>
           <div className='dark:bg-gray-800 min-h-screen'>{children}</div>
           <Footer />
         </SessionProvider>

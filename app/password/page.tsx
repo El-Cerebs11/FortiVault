@@ -25,13 +25,6 @@ interface PasswordManager extends DefaultPasswordManager {
 export default function ProductsDemo() {
   const router = useRouter()
 
-  const session = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push('/signin')
-    },
-  })
-
   const toast = useRef<Toast>(null)
   const dt = useRef<DataTable<PasswordManager[]>>(null)
 
@@ -83,12 +76,12 @@ export default function ProductsDemo() {
     validate: (data: PasswordManager) => {
       let errors: { [key: string]: string } = {}
 
-        ;['serviceName', 'password', 'passPhrase'].forEach((element) => {
-          let key = element as keyof PasswordManager
-          if (data[key] == '') {
-            errors[key] = 'This field is required !'
-          }
-        })
+      ;['serviceName', 'password', 'passPhrase'].forEach((element) => {
+        let key = element as keyof PasswordManager
+        if (data[key] == '') {
+          errors[key] = 'This field is required !'
+        }
+      })
       return errors
     },
 
@@ -409,25 +402,23 @@ export default function ProductsDemo() {
         visible={showDialog}
         header='Password manager'
         modal
-        style={{ width: '90vw', backgroundColor : 'red' }}
+        style={{ width: '90vw', backgroundColor: 'red' }}
         onHide={() => closeDialog()}
         footer={dialogFooter}
       >
         {dialogStatus != DialogStatus.Delete && (
           <>
-
             <div className='flex flex-row gap-4'>
-              <div className="flex-auto">
+              <div className='flex-auto'>
                 {inputTemplate('serviceName', 'Service Name')}
-
               </div>
-              <div className="flex-auto">
+              <div className='flex-auto'>
                 {inputTemplate('serviceUrl', 'Service Url')}
               </div>
             </div>
 
             <div className='flex flex-row gap-4'>
-              <div className="flex-auto">
+              <div className='flex-auto'>
                 {inputTemplate('password', 'Password')}
                 <Button
                   label='Generate'
@@ -439,17 +430,11 @@ export default function ProductsDemo() {
                   onClick={generatePasswordClick}
                 />
               </div>
-              <div className="flex-auto">
-              {inputTemplate('passPhrase', 'PassPhrase')}
+              <div className='flex-auto'>
+                {inputTemplate('passPhrase', 'PassPhrase')}
+              </div>
             </div>
-            </div>
-           
-          
-         
-
-
-
-        </>
+          </>
         )}
       </Dialog>
     </PrimeReactProvider>

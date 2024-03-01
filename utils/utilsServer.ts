@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import bcrypt from 'bcrypt'
-import { User } from '@prisma/client'
-import nodemailer from 'nodemailer';
+import { PrismaClient, User } from '@prisma/client'
+import nodemailer from 'nodemailer'
+import { randomUUID } from 'crypto'
 
 export async function getById(
   objId: string,
@@ -45,7 +46,6 @@ export async function create(
   model: any
 ) {
   try {
-    sendVerificationMail()
     const newObj = await model.create({ data: req.body })
     res.status(201).json(newObj)
   } catch (error) {
@@ -121,39 +121,46 @@ export async function compareHash(
   }
 }
 
+export enum VerificationTokenIdentifier {
+  EMAIL_VERIFICATION = 'email_verification',
+  FORGOT_PASSWORD = 'forgot_password',
+}
 
-
-export function sendVerificationMail() {
-  
-
- 
+export async function sendVerificationMail(user: User) {
   var transporter = nodemailer.createTransport({
-    host: "live.smtp.mailtrap.io",
+    host: 'live.smtp.mailtrap.io',
     port: 587,
     auth: {
-      user: "api",
-      pass: "6aa7f20b0bc3e5aad5674639c2de4499"
-    }
-  });
-  
+      user: 'api',
+      pass: '6aa7f20b0bc3e5aad5674639c2de4499',
+    },
+  })
+  const prisma = new PrismaClient()
+
+  const verificationToken = await prisma.verificationToken.create({
+    data: {
+      identifier: VerificationTokenIdentifier.EMAIL_VERIFICATION,
+      token: `${randomUUID()}${randomUUID()}`.replace(/-/g, ''),
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24), // apres 24 heures
+      user: { connect: { id: user.id } }, // Connect the user relation
+    },
+  })
   // Define email options
   const mailOptions = {
-      from: 'donotreply@demomailtrap.com', // Sender address
-      to: 'adil.abbadi.1996@gmail.com', // List of recipients
-      subject: 'Test Email', // Subject line
-      text: 'This is a test email sent from Node.js', // Plain text body
-      html: '<b>This is a test email sent from <i>Node.js</i></b>', // HTML body
-  };
-  
+    from: 'donotreply@demomailtrap.com', // Sender address
+    to: user.email as string, // List of recipients
+    subject: 'FortiVault: Verificaty email', // Subject line
+    text: `link : ${verificationToken.token}`, // Plain text body
+    html: `<b>link : ${verificationToken.token}</b>`, // HTML body
+  }
+
   // Send email
   transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-          console.error('Error occurred:', error.message);
-          return;
-      }
-      console.log('Email sent successfully!');
-      console.log('Message ID:', info.messageId);
-  });
-
-  
+    if (error) {
+      console.error('Error occurred:', error.message)
+      return
+    }
+    console.log('Email sent successfully!')
+    console.log('Message ID:', info.messageId)
+  })
 }

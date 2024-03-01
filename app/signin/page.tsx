@@ -59,13 +59,6 @@ export default function SignIn() {
     },
   })
 
-  //redirect on auth
-  useEffect(() => {
-    if (router && session && session.status === 'authenticated') {
-      router.push('/')
-    }
-  }, [session, router])
-
   const isFormFieldInvalid = (name: keyof FormDataType) =>
     !!(formik.touched[name] && formik.errors[name])
 

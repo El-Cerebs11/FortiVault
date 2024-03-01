@@ -1,7 +1,7 @@
 import NextAuth, { AuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, User } from '@prisma/client'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { compareHash, hashString } from '@/utils/utilsServer'
 
@@ -18,16 +18,16 @@ export const authOptions: AuthOptions = {
   },
   adapter: PrismaAdapter(prisma),
   callbacks: {
-    session: async ({ session, token, user }) => {
+    session: async ({ session, user, token }) => {
       if (session?.user) {
-        session.user.id = token.uid as string
+        const tokenUser = token.user as User
+        session.user = { ...session.user, ...tokenUser }
       }
       return session
     },
-
-    jwt: async ({ token, user, account, profile }) => {
+    jwt: async ({ token, user, account, profile, isNewUser }) => {
       if (user) {
-        token.uid = user.id
+        token.user = user
       }
       return token
     },

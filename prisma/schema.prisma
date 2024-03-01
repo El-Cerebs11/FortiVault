@@ -44,6 +44,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   passwordManagers PasswordManager[]
+  verificationtokens VerificationToken[]
 }
 
 
@@ -58,10 +59,11 @@ model PasswordManager {
 
 
 
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-}
+  model VerificationToken {
+    identifier String
+    token      String   @unique
+    expires    DateTime
+    userId       String
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    @@unique([identifier, token, userId])
+  }

@@ -15,6 +15,7 @@ import logo from '@/assets/logo.png'
 import { signOut, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { usePathname } from 'next/navigation'
+import { Messages } from 'primereact/messages'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')

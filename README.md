@@ -3,12 +3,14 @@
 Welcome to FortiVault, our secure password manager designed with your security in mind. Easily store and manage your passwords, ensuring worry-free logins across all your accounts.
 
 ## Features
+
 - **Secure Storage**: Your passwords are encrypted and stored securely.
 - **User-Friendly Interface**: Easily manage and organize your passwords.
 - **Multi-platform Access**: Access your passwords from anywhere, on any device.
 - **Strong Authentication**: Ensure secure access to your account with robust authentication measures.
 
 ## Getting Started
+
 To get started with FortiVault, follow these steps:
 
 1. Clone the repository: `git clone https://github.com/fortivault/fortivault.git`
@@ -28,6 +30,7 @@ To get started with FortiVault, follow these steps:
 5. Open your browser and navigate to `http://localhost:3000` to start using FortiVault.
 
 ## Environment Variables
+
 - **NEXTAUTH_URL**: The base URL of the Next.js application.
 - **NODE_ENV**: Environment mode. Set to `"prod"` for production.
 - **NEXTAUTH_SECRET**: Secret key used for NextAuth.js authentication.
@@ -36,6 +39,7 @@ To get started with FortiVault, follow these steps:
 - **GOOGLE_CLIENT_SECRET**: Google OAuth2 client secret for authentication.
 
 ## Technologies Used
+
 - **Next.js**: React framework for building server-side rendered applications.
 - **NextAuth.js**: Authentication library for Next.js applications.
 - **PostgreSQL**: Relational database for storing encrypted passwords.
@@ -43,12 +47,15 @@ To get started with FortiVault, follow these steps:
 - **OAuth2**: Protocol used for authentication, with Google as a provider.
 
 ## Contributing
+
 Contributions are welcome! If you find any issues or have suggestions for improvements, feel free to open an issue or submit a pull request.
 
 ## License
+
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
+
 Special thanks to the developers and contributors of the technologies used in this project.
 
 ---
