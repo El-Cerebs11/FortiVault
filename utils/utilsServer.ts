@@ -3,6 +3,8 @@ import bcrypt from 'bcrypt'
 import { PrismaClient, User } from '@prisma/client'
 import nodemailer from 'nodemailer'
 import { randomUUID } from 'crypto'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/pages/api/auth/[...nextauth]'
 
 export async function getById(
   objId: string,
@@ -130,7 +132,7 @@ export async function sendVerificationMail(user: User) {
 
 
 
- 
+
   const prisma = new PrismaClient()
 
   const verificationToken = await prisma.verificationToken.create({
@@ -142,7 +144,7 @@ export async function sendVerificationMail(user: User) {
     },
   })
 
-
+prisma.$disconnect()
 
   const transporter = nodemailer.createTransport({
     service: "Gmail",
@@ -150,7 +152,7 @@ export async function sendVerificationMail(user: User) {
     port: 465,
     secure: true,
     auth: {
-      user:process.env.GOOGLE_MAIL_USER ,
+      user: process.env.GOOGLE_MAIL_USER,
       pass: process.env.GOOGLE_MAIL_PASS,
     },
   });
@@ -167,4 +169,43 @@ export async function sendVerificationMail(user: User) {
 
   // Send email
   return transporter.sendMail(mailOptions)
+}
+
+
+
+
+
+export async function checkToken(user: User, token: string, identifier: VerificationTokenIdentifier) {
+
+
+  try {
+
+   
+      const prisma = new PrismaClient()
+      const verificationToken = await prisma.verificationToken.findUnique({
+        where: {
+          token: token,
+          userId: user.id,
+          identifier: identifier,
+          expires: {
+            gte: new Date()
+          },
+        },
+      });
+    
+      
+      await prisma.$disconnect();
+      if (verificationToken == null) {
+        return false
+      }
+      else {
+        return true
+      }
+
+
+  
+
+  } catch (error) {
+    return false
+  }
 }

@@ -14,7 +14,8 @@ import { PasswordManager as DefaultPasswordManager } from '@prisma/client'
 import { useFormik } from 'formik'
 import { InputText } from 'primereact/inputtext'
 import { DialogStatus, decryptAES, encryptAES } from '@/utils/utilsClient'
-
+import 'primeicons/primeicons.css';
+        
 interface PasswordManager extends DefaultPasswordManager {
   passPhrase: string
 }
@@ -199,6 +200,7 @@ export default function Password() {
           icon='pi pi-pencil'
           rounded
           outlined
+          size='small'
           className='mr-2'
           onClick={() => editPassword(rowData)}
         />
@@ -206,6 +208,7 @@ export default function Password() {
           icon='pi pi-trash'
           rounded
           outlined
+          size='small'
           severity='danger'
           onClick={() => deletePassword(rowData)}
         />
@@ -374,7 +377,7 @@ export default function Password() {
             rowsPerPageOptions={[10, 20, 50]}
             paginatorTemplate='FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown'
             currentPageReportTemplate='Showing {first} to {last} of {totalRecords} passwords'
-            className='rounded pb-auto'
+            className='rounded pb-auto text-xs'
           >
             <Column
               field='serviceName'
@@ -398,7 +401,7 @@ export default function Password() {
         visible={showDialog}
         header='Password manager'
         modal
-        style={{ width: '90vw', backgroundColor: 'red' }}
+        style={{ width: '90vw'}}
         onHide={() => closeDialog()}
         footer={dialogFooter}
       >

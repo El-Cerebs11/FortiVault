@@ -47,7 +47,7 @@ export default function SignIn() {
         })
 
         if (resp?.ok) {
-          router.push('/')
+          window.location.href = '/'
         } else {
           toast.current?.show({
             severity: 'error',

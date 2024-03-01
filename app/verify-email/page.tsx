@@ -1,6 +1,6 @@
 
-
-import React from 'react'
+'use client'
+import React, { useEffect, useState } from 'react'
 
 import { useSearchParams } from 'next/navigation'
 import { PrismaClient } from '@prisma/client'
@@ -8,26 +8,39 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/pages/api/auth/[...nextauth]'
 import { useSession } from 'next-auth/react'
 import { NextApiRequest, NextApiResponse } from 'next'
+import axios from 'axios'
 
 export default function VerifyEmail({
     params,
     searchParams,
-  }: {
+}: {
     params: { slug: string }
     searchParams: { [key: string]: string | string[] | undefined }
-  }) {
+}) {
+
+
+    const [verified, setVerified] = useState<boolean | null>(null)
+
+
+    const apiUrl = "/api/verify-email-token/"
+    useEffect(() => {
+
+
+        axios.get(`${apiUrl}?token=${searchParams.token}`).then((resp) => {
+            setVerified(true)
+
+        }).catch((error) => {
+setVerified(false)
+        })
+
+
+    }, [])
 
 
 
 
+    const switchStatus = () => {
 
-
-
-
- 
-
-    const  switchStatus =  async () => {
- let  verified : boolean = true
         const good = (<div className="font-normal text-gray-700 dark:text-gray-400">
 
             Email has been verified successfully.  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 inline-block mr-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -44,8 +57,22 @@ export default function VerifyEmail({
         </div>
         )
 
+        const wait = (<div className="font-normal text-gray-700 dark:text-gray-400">
+            verification progress ....
+        </div>
+        )
 
-       return verified ? good : bad
+        switch (verified) {
+            case true:
+                return good
+
+            case false:
+                return bad
+
+            default:
+                return wait
+
+        }
     }
 
 
