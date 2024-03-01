@@ -4,7 +4,7 @@ import './globals.scss'
 import SessionProvider from './SessionProvider'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import WarningAlert from '@/components/WarningAlert'
+import EmailVerificationAlert from '@/components/EmailVerificationAlert'
 
 export default async function RootLayout({
   children,
@@ -13,12 +13,13 @@ export default async function RootLayout({
 }) {
   const session = await getServerSession(authOptions)
 
+
   return (
     <html lang='en'>
       <body>
         <SessionProvider session={session}>
           <Navbar />
-          <WarningAlert title='hi' message='adilo'></WarningAlert>
+        { session?.user?.emailVerified === null && (<EmailVerificationAlert></EmailVerificationAlert>)}
           <div className='dark:bg-gray-800 min-h-screen'>{children}</div>
           <Footer />
         </SessionProvider>

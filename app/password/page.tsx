@@ -13,17 +13,13 @@ import axios, { AxiosRequestConfig } from 'axios'
 import { PasswordManager as DefaultPasswordManager } from '@prisma/client'
 import { useFormik } from 'formik'
 import { InputText } from 'primereact/inputtext'
-import { useSession } from 'next-auth/react'
-import 'primeicons/primeicons.css'
-import { useRouter } from 'next/navigation'
 import { DialogStatus, decryptAES, encryptAES } from '@/utils/utilsClient'
 
 interface PasswordManager extends DefaultPasswordManager {
   passPhrase: string
 }
 
-export default function ProductsDemo() {
-  const router = useRouter()
+export default function Password() {
 
   const toast = useRef<Toast>(null)
   const dt = useRef<DataTable<PasswordManager[]>>(null)
@@ -38,7 +34,7 @@ export default function ProductsDemo() {
   }
 
   const [refresh, setRefresh] = useState(0)
-  const apiUrl = '/api/passwordManager'
+  const apiUrl = '/api/password-manager'
   const [passwordManagers, setPasswordManagers] = useState<PasswordManager[]>(
     []
   )

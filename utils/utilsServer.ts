@@ -127,14 +127,10 @@ export enum VerificationTokenIdentifier {
 }
 
 export async function sendVerificationMail(user: User) {
-  var transporter = nodemailer.createTransport({
-    host: 'live.smtp.mailtrap.io',
-    port: 587,
-    auth: {
-      user: 'api',
-      pass: '6aa7f20b0bc3e5aad5674639c2de4499',
-    },
-  })
+
+
+
+ 
   const prisma = new PrismaClient()
 
   const verificationToken = await prisma.verificationToken.create({
@@ -145,22 +141,30 @@ export async function sendVerificationMail(user: User) {
       user: { connect: { id: user.id } }, // Connect the user relation
     },
   })
-  // Define email options
+
+
+
+  const transporter = nodemailer.createTransport({
+    service: "Gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user:process.env.GOOGLE_MAIL_USER ,
+      pass: process.env.GOOGLE_MAIL_PASS,
+    },
+  });
+
+  const verificationUrl = `${process.env.NEXTAUTH_URL}/verify-email?token=${verificationToken.token}`;
+
   const mailOptions = {
-    from: 'donotreply@demomailtrap.com', // Sender address
+    from: process.env.GOOGLE_MAIL_USER, // Sender address
     to: user.email as string, // List of recipients
-    subject: 'FortiVault: Verificaty email', // Subject line
-    text: `link : ${verificationToken.token}`, // Plain text body
-    html: `<b>link : ${verificationToken.token}</b>`, // HTML body
-  }
+    subject: 'FortiVault: Verify your email', // Subject line
+    text: `Please verify your email by clicking the following link: ${verificationUrl}`, // Plain text body
+    html: `<p>Please verify your email by clicking the link below:</p><a href="${verificationUrl}" target="_blank">Verify Email</a>`, // HTML body
+  };
 
   // Send email
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error('Error occurred:', error.message)
-      return
-    }
-    console.log('Email sent successfully!')
-    console.log('Message ID:', info.messageId)
-  })
+  return transporter.sendMail(mailOptions)
 }

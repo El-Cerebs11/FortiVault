@@ -202,12 +202,12 @@ export default function SignIn() {
 
           <p className='mt-10 text-center text-sm text-gray-500 dark:text-gray-400'>
             Not a member?{' '}
-            <a
+            <button
               onClick={() => router.push('signup')}
               className='font-semibold leading-6 text-indigo-600 hover:text-indigo-500 dark:text-indigo-200'
             >
               Sign Up
-            </a>
+            </button>
           </p>
         </div>
       </div>

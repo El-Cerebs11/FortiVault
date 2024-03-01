@@ -1,9 +1,6 @@
 import { withAuth } from 'next-auth/middleware'
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from './pages/api/auth/[...nextauth]'
 import { getToken } from 'next-auth/jwt'
-import { signIn } from 'next-auth/react'
 
 export default withAuth(
   async function middleware(req: NextRequest) {
