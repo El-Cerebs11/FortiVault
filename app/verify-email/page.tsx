@@ -23,7 +23,7 @@ export default function VerifyEmail({
     axios
       .get(`${apiUrl}?token=${searchParams.token}`)
       .then((resp) => {
-        setVerified(true)
+        setVerified(resp.data.verified)
       })
       .catch((error) => {
         setVerified(false)
