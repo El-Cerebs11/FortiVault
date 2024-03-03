@@ -128,7 +128,7 @@ export enum VerificationTokenIdentifier {
   FORGOT_PASSWORD = 'forgot_password',
 }
 
-export async function sendVerificationMail(user: User) {
+export async function sendVerificationEmail(user: User) {
   const prisma = new PrismaClient()
 
   const verificationToken = await prisma.verificationToken.create({
@@ -166,6 +166,49 @@ export async function sendVerificationMail(user: User) {
   // Send email
   return transporter.sendMail(mailOptions)
 }
+
+export async function sendResetPasswordEmail(user: User) {
+  const prisma = new PrismaClient()
+
+  const verificationToken = await prisma.verificationToken.create({
+    data: {
+      identifier: VerificationTokenIdentifier.FORGOT_PASSWORD,
+      token: `${randomUUID()}${randomUUID()}`.replace(/-/g, ''),
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24), // apres 24 heures
+      user: { connect: { id: user.id } }, // Connect the user relation
+    },
+  })
+
+  prisma.$disconnect()
+
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+      user: process.env.GOOGLE_MAIL_USER,
+      pass: process.env.GOOGLE_MAIL_PASS,
+    },
+  })
+
+  const resetPasswordLink = `${process.env.NEXTAUTH_URL}/reset-password?token=${verificationToken.token}&email=${user.email}`
+
+  const mailOptions = {
+    from: process.env.GOOGLE_MAIL_USER, // Sender address
+    to: user.email as string, // List of recipients
+    subject: 'FortiVault: Password reset', // Subject line
+    text: `We received a password reset request for your account. To reset your password, just click the link below: ${resetPasswordLink}`, // Plain text body
+    html: `<p>We received a password reset request for your account. To reset your password, just click the link below:</p><a href="${resetPasswordLink}" target="_blank">Reset Password</a>`, // HTML body
+  }
+
+  // Send email
+  return transporter.sendMail(mailOptions)
+}
+
+
+
+
 
 export async function checkToken(
   user: User,

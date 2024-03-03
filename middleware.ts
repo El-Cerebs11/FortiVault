@@ -8,7 +8,7 @@ export default withAuth(
     const isAuthenticated = !!token
 
 
-    const protectedAuth = ['/signin', '/signup'];
+    const protectedAuth = ['/signin', '/signup', '/forgot-password' , '/reset-password'];
     const protectedAnonymos = ['/password', '/verify-email'];
 const pathname = req.nextUrl.pathname;
 

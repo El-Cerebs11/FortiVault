@@ -7,7 +7,6 @@ declare module 'next-auth' {
     email: String | null
     emailVerified: DateTime
     image: string | null
-    password: string | null
   }
   interface Session {
     user?: User & DefaultSession['user']

@@ -47,7 +47,7 @@ export default function Navbar() {
 
   const navigation = [
     { name: 'Home', href: '/', current: pathname === '/' },
-    { name: 'Password', href: '/password', current: pathname === '/password' },
+    { name: 'Password', href: '/password-app', current: pathname === '/password-app' },
     { name: 'Sign In', href: '/signin', current: pathname === '/signin' },
     { name: 'Sign Up', href: '/signup', current: pathname === '/signup' },
   ]
@@ -123,7 +123,7 @@ export default function Navbar() {
 
                 <div
                   className={classNames(
-                    session.status === 'unauthenticated' || !session
+                  (  session.status === 'unauthenticated' || !session || session.status == 'loading')
                       ? 'hidden'
                       : '',
                     'absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0'

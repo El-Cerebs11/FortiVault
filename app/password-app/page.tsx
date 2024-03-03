@@ -360,7 +360,7 @@ export default function Password() {
   }
 
   return (
-    <PrimeReactProvider value={{ unstyled: true, pt: Tailwind }}>
+    <PrimeReactProvider value={{ unstyled: false, pt: Tailwind }}>
       <div className='container mx-auto py-3'>
         <Toast ref={toast} />
         <div className='card'>

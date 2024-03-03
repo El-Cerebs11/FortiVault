@@ -27,7 +27,6 @@ export default async function handler(
     }
   } else if (req.method === 'POST') {
     req.body.userId = filterOptions.userId
-
     return create(req, res, model)
   } else if (req.method === 'PUT') {
     return update(req, res, model, filterOptions)

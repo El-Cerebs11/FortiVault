@@ -18,7 +18,7 @@ export default function VerifyEmail({
 }) {
   const [verified, setVerified] = useState<boolean | null>(null)
 
-  const apiUrl = '/api/verify-email-token/'
+  const apiUrl = '/api/verify-email/'
   useEffect(() => {
     axios
       .get(`${apiUrl}?token=${searchParams.token}`)
@@ -28,7 +28,7 @@ export default function VerifyEmail({
       .catch((error) => {
         setVerified(false)
       })
-  }, [])
+  }, [searchParams])
 
   const switchStatus = () => {
     const good = (

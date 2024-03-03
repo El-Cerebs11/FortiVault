@@ -34,10 +34,10 @@ const EmailVerificationAlert = () => {
 
   return (
     <div
-      className='bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4'
+      className='bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 text-sm h-auto'
       role='alert'
     >
-      <PrimeReactProvider value={{ unstyled: true, pt: Tailwind }}>
+      <PrimeReactProvider value={{ unstyled: false, pt: Tailwind }}>
         <Toast ref={toast} />
       </PrimeReactProvider>
 

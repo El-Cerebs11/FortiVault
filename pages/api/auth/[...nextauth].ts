@@ -31,6 +31,22 @@ export const authOptions: AuthOptions = {
       }
       return token
     },
+    signIn:  async ({ user, account, profile, email, credentials }) =>{
+      if (account?.provider === "google" && user.emailVerified == null ) {
+        const vDate = new Date()
+        user.emailVerified = vDate ;
+        const userReal = await prisma.user.findUnique({
+          where: {
+            id: user.id,
+          },
+        })
+        if(userReal){
+          await  prisma.user.update({where : {id : user.id} ,  data:{emailVerified :vDate}})
+        }
+      
+      }
+      return true; 
+    },
   },
   providers: [
     CredentialsProvider({
