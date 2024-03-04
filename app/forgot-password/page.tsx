@@ -151,7 +151,7 @@ export default function ForgotPassword() {
                   <span className='sr-only'>Loading...</span>
                 </div>
 
-                <span>Send resent link</span>
+                <span>Send reset link</span>
               </div>
             </button>
           </form>
