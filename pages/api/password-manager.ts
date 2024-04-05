@@ -16,7 +16,7 @@ export default async function handler(
   const filterOptions = { userId: session?.user?.id }
 
   if (filterOptions.userId == null || filterOptions.userId == undefined) {
-    return res.status(401).json({ error: 'User not authentificated' })
+    return res.status(401).json({ error: 'User not authenticated' })
   }
   if (req.method === 'GET') {
     const objId = req.query.id as string
