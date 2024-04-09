@@ -17,7 +17,7 @@ const EmailVerificationAlert = () => {
       .then((response) => {
         toast.current?.show({
           severity: 'success',
-          summary: 'Mail send',
+          summary: 'Mail sent',
         })
       })
       .catch((error) => {
